@@ -41,14 +41,28 @@ This repo contains materials for internal training in [R](https://www.r-project.
 ## ggplot2 basics
 
 * Grammar of graphics overview
-* Basic plot types (scatter, line, bar)
+    - Data
+        ~Structure
+    - Aesthetics
+        ~ coordinates
+        ~ color
+        ~ fill
+        ~ shape/linetype
+    - Geometries
+        ~ Basic plot types (scatter, line, bar)
+* Labels
+* Scales
 
 ## ggplot2
 
-* Scales
+* Statistics
 * Facets
 * Themes
 
+## gridEXTRA
+
+* Basic Grammar
+* Intermediate Layouts
 
 
 
