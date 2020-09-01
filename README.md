@@ -42,7 +42,7 @@ This repo contains materials for internal training in [R](https://www.r-project.
 
 * Grammar of graphics overview
     - Data
-        ~Structure
+        ~ Structure
     - Aesthetics
         ~ coordinates
         ~ color
@@ -50,13 +50,14 @@ This repo contains materials for internal training in [R](https://www.r-project.
         ~ shape/linetype
     - Geometries
         ~ Basic plot types (scatter, line, bar)
+
 * Labels
 * Scales
 
 ## ggplot2
 
-* Statistics
 * Facets
+* Statistics
 * Themes
 
 ## gridEXTRA
