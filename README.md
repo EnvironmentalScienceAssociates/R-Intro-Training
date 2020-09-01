@@ -52,7 +52,7 @@ This repo contains materials for internal training in [R](https://www.r-project.
         ~ Basic plot types (scatter, line, bar)
 
 * Labels
-* Scales
+* Aesthetics
 
 ## advanced ggplot2
 
