@@ -29,7 +29,7 @@ This repo contains materials for internal training in [R](https://www.r-project.
 * Select columns
 * Add columns (mutate)
 * Grouped summaries
-* Groupd mutates and filters
+* Grouped mutates and filters
 
 ## Tidy Data
 
