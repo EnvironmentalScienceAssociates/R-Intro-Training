@@ -165,57 +165,7 @@ ggplot(data = mtcars_factor)+
 
 #### Scales
 # Scales are important to help us see trends AND to help us define our legend components
-# Two properties of graphs can be scaled: Axes and Aesthetics
-
-# Scaling Axes
-# Adjusting the axes to represent different scales/information is done through a simple call:
-
-# scale_x_[function]() or scale_y_[function]()
-
-# built in scale functions are: continuous, discrete, log10, sqrt, and reverse
-# discrete scale only works for categorical variables (text, factor, integer)
-# all other scales only work for continuous numeric variables
-
-
-ggplot(data = mtcars_factor)+ 
-  geom_point(aes(x = mpg, y = qsec))+
-  scale_x_continuous()+ #This is where we can scale the x-axis
-  labs(title = "Miles per Gallon vs. Cylinder Count",
-       subtitle = "V-Shaped vs. Flat",
-       x = "Quarter Mile Time (seconds)",
-       y = "Miles per Gallon (mpg)")
-
-ggplot(data = mtcars_factor)+ 
-  geom_point(aes(x = mpg, y = qsec))+
-  scale_x_continuous(breaks = c(10,20,30))+ #change the "breaks" (labels)
-  labs(title = "Miles per Gallon vs. Cylinder Count",
-       subtitle = "V-Shaped vs. Flat",
-       x = "Quarter Mile Time (seconds)",
-       y = "Miles per Gallon (mpg)")
-
-ggplot(data = mtcars_factor)+ 
-  geom_point(aes(x = mpg, y = qsec))+
-  scale_x_log10()+ #change the scale to logarithmic
-  labs(title = "Miles per Gallon vs. Cylinder Count",
-       subtitle = "V-Shaped vs. Flat",
-       x = "Quarter Mile Time (seconds)",
-       y = "Miles per Gallon (mpg)")
-
-ggplot(data = mtcars_factor)+ 
-  geom_point(aes(x = mpg, y = qsec))+
-  scale_x_sqrt()+ #change the scale to sqrt
-  labs(title = "Miles per Gallon vs. Cylinder Count",
-       subtitle = "V-Shaped vs. Flat",
-       x = "Quarter Mile Time (seconds)",
-       y = "Miles per Gallon (mpg)")
-
-ggplot(data = mtcars_factor)+ 
-  geom_point(aes(x = mpg, y = qsec))+
-  scale_x_reverse()+ #change the scale to reverse?
-  labs(title = "Miles per Gallon vs. Cylinder Count",
-       subtitle = "V-Shaped vs. Flat",
-       x = "Quarter Mile Time (seconds)",
-       y = "Miles per Gallon (mpg)")
+# Two properties of graphs can be scaled: Aesthetics and Axes (covered in part 2)
 
 # Scaling Aesthetics
 # Scaling aesthetics can be done to adjust the colors, shapes, and sizes of geometries

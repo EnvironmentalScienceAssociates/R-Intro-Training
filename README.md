@@ -54,7 +54,7 @@ This repo contains materials for internal training in [R](https://www.r-project.
 * Labels
 * Scales
 
-## ggplot2
+## advanced ggplot2
 
 * Facets
 * Statistics
