@@ -17,7 +17,7 @@ poke <- poke %>%
   mutate_if(., is.factor, as.character)
 
 poke_mod <- poke %>%
-  filter(., stringr::str_detect("(Grass|Water|Fire)", Type.1))
+  filter(., stringr::str_detect("(Grass|Water|Fire)", Type.1)) #filter for just those with these types
 
 str(poke_mod)
 
@@ -168,7 +168,7 @@ ggplot(data = poke, mapping = aes(x = Type.1)) +
 # all other scales only work for continuous numeric variables
 
 
-ggplot(data = mtcars_factor)+ 
+ggplot(data = mtcars)+ 
   geom_point(aes(x = mpg, y = qsec))+
   scale_x_continuous()+ #This is where we can scale the x-axis
   labs(title = "Miles per Gallon vs. Cylinder Count",
@@ -176,7 +176,7 @@ ggplot(data = mtcars_factor)+
        x = "Quarter Mile Time (seconds)",
        y = "Miles per Gallon (mpg)")
 
-ggplot(data = mtcars_factor)+ 
+ggplot(data = mtcars)+ 
   geom_point(aes(x = mpg, y = qsec))+
   scale_x_continuous(breaks = c(10,20,30))+ #change the "breaks" (labels)
   labs(title = "Miles per Gallon vs. Cylinder Count",
@@ -184,7 +184,7 @@ ggplot(data = mtcars_factor)+
        x = "Quarter Mile Time (seconds)",
        y = "Miles per Gallon (mpg)")
 
-ggplot(data = mtcars_factor)+ 
+ggplot(data = mtcars)+ 
   geom_point(aes(x = mpg, y = qsec))+
   scale_x_reverse()+ #change the scale to reverse?
   labs(title = "Miles per Gallon vs. Cylinder Count",
@@ -193,12 +193,12 @@ ggplot(data = mtcars_factor)+
        y = "Miles per Gallon (mpg)")
 
 # what about zooming into specific parts of the data?
-ggplot(data = mtcars_factor, aes(x = mpg))+
+ggplot(data = mtcars, aes(x = mpg))+
   geom_histogram()
 
 # lets focus on cars above 25 mpg
 # use scale_x_continuous and set limits, and make new breaks
-ggplot(data = mtcars_factor, aes(x = mpg))+
+ggplot(data = mtcars, aes(x = mpg))+
   geom_histogram()+
   scale_x_continuous(limits = c(25, 35), breaks = seq(25,35,2))
 
@@ -254,3 +254,62 @@ ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) 
                        labels = c("Fire Pokemon",
                                   "Grass Pokemon",
                                   "Water Pokemon"))
+
+# This is pretty intense, can you make it easier? 
+# Use the ESA Template!! Simply copy and paste from lines 261 to 287 at the top of your script
+
+library(ggthemr)
+
+# Create a palette of the ESA brand colors, alternating between each color and shade
+esa_colours <- c('#F9A134', '#699CC6', '#A0CF67', '#9370B1', '#F26531', '#72CCD2', '#098A5B', '#781D7E','#B12533', '#004261', '#015E44', '#421953', '#DCDDDE', '#ADAFB2', '#6D6E71')
+esa_colours <- c('#000000', esa_colours) #Add black as the "initial" color (outlining boxes, and plain plots)
+
+esa_theme <- define_palette(
+  swatch = esa_colours, # colors for plotting points
+  gradient = c(lower = esa_colours[7L], upper = esa_colours[11L]), # upper and lower colors for continuous colors
+  background = '#FFFFFF' # White background
+)
+
+# Apply create this as a "theme" in ggthemr
+ggthemr(esa_theme, type = "outer", layout = "minimal", spacing = 3)
+
+# Finally we create a theme which we can call in ggplot!
+theme_esa <- function(base_size = 11, base_family = "", base_line_size = base_size/22, base_rect_size = base_size/22){
+  theme_bw(base_size = base_size, base_family = base_family,
+           base_line_size = base_line_size, base_rect_size = base_rect_size) %+replace%
+    theme(panel.border =element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(color = '#000000', size = rel(1)),
+          legend.key = element_blank(),
+          plot.title = element_text(size = 18, face = 'bold'),
+          plot.subtitle = element_text(size = 12, face = 'italic', color = 'grey40'),
+          plot.caption = element_text(hjust = 0, size = 9, color = 'grey30'),
+          strip.background = element_rect(fill = '#FFFFFF', color = "#000000", size = rel(2)), complete = TRUE)
+}
+
+# Test it out
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_esa() + # THEME IS HERE
+   scale_color_manual(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                      labels = c("Fire Pokemon",
+                                 "Grass Pokemon",
+                                 "Water Pokemon"),
+                      values = c(esa_colours[2], esa_colours[4], esa_colours[3])) # scale the colors manually to ensure they match (can we do this another way?)
+
+# alternate
+poke_mod <- poke_mod %>%
+  mutate(Type.1 = factor(Type.1, levels = c("Fire","Water","Grass")))
+
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_esa() + # THEME IS HERE
+  scale_color_discrete(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                     labels = c("Fire Pokemon",
+                                "Water Pokemon",
+                                "Grass Pokemon"))
