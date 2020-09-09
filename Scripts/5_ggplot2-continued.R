@@ -11,7 +11,7 @@ library(ggplot2)
 library(tidyverse)
 
 # first load in the Pokemon dataset. 
-poke <- read.csv("Pokemon.csv")
+poke <- read.csv(file.path("Data", "Pokemon.csv"))
 
 poke <- poke %>%
   mutate_if(., is.factor, as.character)
