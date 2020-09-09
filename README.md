@@ -54,7 +54,7 @@ This repo contains materials for internal training in [R](https://www.r-project.
 * Labels
 * Aesthetics
 
-## advanced ggplot2
+## ggplot2 continued
 
 * Facets
 * Statistics
