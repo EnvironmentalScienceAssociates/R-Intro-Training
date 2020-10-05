@@ -1,6 +1,6 @@
 ---
-title: "R basics"
-author: "Travis Hinkelman"
+title: "Introduction to R for Excel Users"
+author: "Travis Hinkelman & Taylor Spaulding"
 date: "2020-11-20"
 output: ioslides_presentation
 widescreen: true
@@ -11,5 +11,20 @@ css: styles.css
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Slide 1
+## Motivation
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:375px"> 
+<img src="https://www.r-project.org/logo/Rlogo.png" style = "height:375px; padding-left:50px">  
+
+## Motivation
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:375px"> 
+<img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png" style = "height:375px; padding-left:125px">  
+
+## R
+
+<img src="https://developers.refinitiv.com/content/dam/devportal/articles/setup-jupyter-notebook-for-r/step1_installr.png" style = "height:450px;  padding-left:225px">  
+
+## RStudio
+
+<img src="https://data.princeton.edu/R/RStudioIDE.png" style = "height:450px;  padding-left:200px">  
