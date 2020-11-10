@@ -32,8 +32,10 @@ style_duo_accent(
 
 .pull-left[
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:300px"> 
-
 ]
+
+--
+
 .pull-right[
 <img src="https://www.r-project.org/logo/Rlogo.png"  style="height:300px">  
 ]
@@ -52,21 +54,76 @@ style_duo_accent(
 ---
 ## Rterm
 
-<img src="/Slides/img/Rterm.png"> 
+<img src="Rterm.png">
 
 ---
 ## RGui
 
-```{r echo = TRUE}
-knitr::include_graphics("/Slides/img/RGui.png", error = FALSE)
-```
+<img src="RGui.png">
 
 ---
 ## RStudio
 
-knitr::include_graphics("Slides/img/RStudio.png", error = FALSE)
+<img src="RStudio.png">
 
 ---
+## R Packages
+
+<img src="https://www.researchgate.net/publication/333159083/figure/fig1/AS:759374838517760@1558060478678/Number-of-R-packages-contributed-to-the-Comprehensive-R-Archive-Network-CRAN-as-a.png">
+
+.footnote[[Epskamp 2019](https://doi.org/10.1177/2515245919847421)]
+
+---
+## Install Packages (CRAN)
+
+<img src="InstallPackages.png">
+
+---
+
+## Install Packages (GitHub)
+
+<img src="InstallPackagesRemotes.png">
+
+---
+
+## Install Packages (Bioconductor)
+
+<img src="InstallPackagesBioconductor.png">
+
+---
+
+## Install Packages (Bioconductor)
+
+<img src="InstallPackagesBioconductor-rhdf5.png">
+
+---
+
+## Update Packages
+
+<img src="UpdatePackages.png">
+
+---
+
+## R Documentation
+
+Quality of documentation is uneven.
+
+Following two lines are equivalent ways to open documentation.
+
+```{r echo = TRUE, eval=FALSE}
+?mean
+
+help("mean")
+```
+
+---
+
+## Package Websites
+
+<img src="PackageWebsite.png">
+
+---
+
 ## Data Structures
 
 One advantage of Excel is that the data are front and center. Feels tangible.
@@ -104,23 +161,9 @@ c("a", "b", "c")
 ```{r echo = TRUE}
 c(TRUE, FALSE, TRUE)
 ```
-
----
-
-## Vectors
-
-All elements of a vector must be the same type. Type coercion is implicit and a common source of confusion.
-
-```{r echo = TRUE}
-c(1, 2, "a", "b")
-```
 --
 ```{r echo = TRUE}
-c(1, 2, TRUE, FALSE)
-```
---
-```{r echo = TRUE}
-c("a", "b", TRUE, FALSE)
+c("let's", "make", "a", "vector")
 ```
 
 ---
@@ -160,8 +203,35 @@ sqrt(c(1, 4, 9, 16))
 ```
 --
 ```{r echo = TRUE}
-0:5 + 10:15
+c(1, 2, 3) * c(10, 11, 12)
 ```
+--
+```{r echo = TRUE}
+paste0(c("flood", "dragon"), c("plain", "fly"))
+```
+
+
+---
+
+## Vectors
+
+All elements of a vector must be the same type. 
+
+Type coercion is implicit and a common source of confusion.
+
+--
+```{r echo = TRUE}
+c(1, 2, "a", "b")
+```
+--
+```{r echo = TRUE}
+c(1, 2, TRUE, FALSE)
+```
+--
+```{r echo = TRUE}
+c("a", "b", TRUE, FALSE)
+```
+
 
 ---
 
@@ -204,9 +274,7 @@ data.frame(Length4 = 1:4,
            Length1 = 1)
 ```
 
----
-
-## Data Frames
+--
 
 Recycling fails when longer vector is not a multiple of shorter vector.
 
@@ -242,10 +310,26 @@ tibble::tibble(Number = 1:2,
 ```
 
 ---
+## Tibbles
+
+Tibbles prevent recycling of vectors to avoid surprises.
+
+```{r echo = TRUE}
+data.frame(Length4 = 1:4,
+           Length2 = 1:2)
+```
+
+```{r echo = TRUE, error = TRUE}
+tibble(Length4 = 1:4,
+       Length2 = 1:2)
+```
+---
 
 ## Tibbles
 
-By default, data frames truncate printing at 333 rows. Always use head if you don't know how big a data frame is.
+By default, data frames truncate printing at 333 rows. 
+
+Always use head if you don't know how big a data frame is.
 
 ```{r echo = TRUE, error=TRUE}
 data.frame(x = 1:500, y = sample(1:500), z = rnorm(500))
@@ -263,5 +347,36 @@ tibble::tibble(x = 1:500, y = sample(1:500), z = rnorm(500))
 
 ---
 
+## Working Directory
+
+A key part of reading and writing data is understanding where R is looking for and putting data, respectively.
+
+```{r echo = TRUE}
+getwd()
+```
+
+--
+
+`getwd` returns absolute paths, but using relative paths makes work more reproducible across different computers.
+
+--
+
+[Project-oriented workflow](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+>If the first line of your R script is
+`setwd("C:\Users\jenny\path\that\only\I\have")`  
+I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.  
+
+
+---
+
+## Writing Data
+
+---
+
 ## Reading Data
+
+---
+
+## Saving Workspace
 

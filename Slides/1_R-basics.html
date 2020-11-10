@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to R for Excel Users</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Travis Hinkelman" />
+    <meta name="author" content="Taylor Spaulding" />
+    <meta name="date" content="2020-11-20" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to R for Excel Users
+### Travis Hinkelman
+### Taylor Spaulding
+### 2020-11-20
+
+---
+
+
+
+
+
+
+## Motivation
+
+.pull-left[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:300px"&gt; 
+]
+
+--
+
+.pull-right[
+&lt;img src="https://www.r-project.org/logo/Rlogo.png"  style="height:300px"&gt;  
+]
+
+---
+## Motivation
+
+.pull-left[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:300px"&gt; 
+
+]
+.pull-right[
+&lt;img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png"  style="height:300px; padding-left:80px"&gt;  
+]
+
+---
+## Rterm
+
+&lt;img src="Rterm.png"&gt;
+
+---
+## RGui
+
+&lt;img src="RGui.png"&gt;
+
+---
+## RStudio
+
+&lt;img src="RStudio.png"&gt;
+
+---
+## R Packages
+
+&lt;img src="https://www.researchgate.net/publication/333159083/figure/fig1/AS:759374838517760@1558060478678/Number-of-R-packages-contributed-to-the-Comprehensive-R-Archive-Network-CRAN-as-a.png"&gt;
+
+.footnote[[Epskamp 2019](https://doi.org/10.1177/2515245919847421)]
+
+---
+## Install Packages (CRAN)
+
+&lt;img src="InstallPackages.png"&gt;
+
+---
+
+## Install Packages (GitHub)
+
+&lt;img src="InstallPackagesRemotes.png"&gt;
+
+---
+
+## Install Packages (Bioconductor)
+
+&lt;img src="InstallPackagesBioconductor.png"&gt;
+
+---
+
+## Install Packages (Bioconductor)
+
+&lt;img src="InstallPackagesBioconductor-rhdf5.png"&gt;
+
+---
+
+## Update Packages
+
+&lt;img src="UpdatePackages.png"&gt;
+
+---
+
+## R Documentation
+
+Quality of documentation is uneven.
+
+Following two lines are equivalent ways to open documentation.
+
+
+```r
+?mean
+
+help("mean")
+```
+
+---
+
+## Package Websites
+
+&lt;img src="PackageWebsite.png"&gt;
+
+---
+
+## Data Structures
+
+One advantage of Excel is that the data are front and center. Feels tangible.
+
+--
+
+Important to feel comfortable with R's functions for showing the shape and structure of your data, e.g., `length`, `dim`, `nrow`, `head`, `View`, `glimpse`, `summary`.
+
+--
+
+A good mental model of the shape and structure of your data helps you understand the code that you need to write to analyze that data.
+
+--
+
+R has four main data structures: vector, matrix/array, list, and data frame.
+
+--
+
+We will focus on vectors and data frames.
+
+---
+
+## Vectors
+
+Combine elements into a vector with `c` (for **c**ombine or **c**oncatenate).
+
+
+```r
+c(1, 2, 3)
+```
+
+```
+## [1] 1 2 3
+```
+--
+
+```r
+c("a", "b", "c")
+```
+
+```
+## [1] "a" "b" "c"
+```
+--
+
+```r
+c(TRUE, FALSE, TRUE)
+```
+
+```
+## [1]  TRUE FALSE  TRUE
+```
+--
+
+```r
+c("let's", "make", "a", "vector")
+```
+
+```
+## [1] "let's"  "make"   "a"      "vector"
+```
+
+---
+
+## Vectors
+
+Create numeric sequences with `:` or `seq`.
+
+
+```r
+1:5
+```
+
+```
+## [1] 1 2 3 4 5
+```
+--
+
+```r
+2:-3
+```
+
+```
+## [1]  2  1  0 -1 -2 -3
+```
+--
+
+```r
+seq(from = 1, to = 5, by = 1)
+```
+
+```
+## [1] 1 2 3 4 5
+```
+--
+
+```r
+seq(3, 1, -0.5)
+```
+
+```
+## [1] 3.0 2.5 2.0 1.5 1.0
+```
+
+---
+
+## Vectors
+
+Many operations in R are "vectorized."
+
+
+```r
+seq(2, 10, 2) / 2
+```
+
+```
+## [1] 1 2 3 4 5
+```
+--
+
+```r
+sqrt(c(1, 4, 9, 16))
+```
+
+```
+## [1] 1 2 3 4
+```
+--
+
+```r
+c(1, 2, 3) * c(10, 11, 12)
+```
+
+```
+## [1] 10 22 36
+```
+--
+
+```r
+paste0(c("flood", "dragon"), c("plain", "fly"))
+```
+
+```
+## [1] "floodplain" "dragonfly"
+```
+
+
+---
+
+## Vectors
+
+All elements of a vector must be the same type. 
+
+Type coercion is implicit and a common source of confusion.
+
+--
+
+```r
+c(1, 2, "a", "b")
+```
+
+```
+## [1] "1" "2" "a" "b"
+```
+--
+
+```r
+c(1, 2, TRUE, FALSE)
+```
+
+```
+## [1] 1 2 1 0
+```
+--
+
+```r
+c("a", "b", TRUE, FALSE)
+```
+
+```
+## [1] "a"     "b"     "TRUE"  "FALSE"
+```
+
+
+---
+
+## Data Frames
+
+Data frames are tabular data structures where each column is a vector.
+
+
+```r
+data.frame(Integer = 1L:3L,
+           Double = c(1, 2.5, 3),
+           Logical = c(TRUE, FALSE, TRUE),
+           Character = c("strings", "better", "name"),
+           Factor = as.factor(c("factors", "are", "special")))
+```
+
+```
+##   Integer Double Logical Character  Factor
+## 1       1    1.0    TRUE   strings factors
+## 2       2    2.5   FALSE    better     are
+## 3       3    3.0    TRUE      name special
+```
+
+---
+
+## Data Frames
+
+Examine data frame structure with `glimpse`.
+
+
+```r
+d &lt;- data.frame(Integer = 1L:3L,
+                Double = c(1, 2.5, 3),
+                Logical = c(TRUE, FALSE, TRUE),
+                Character = c("strings", "better", "name"),
+                Factor = as.factor(c("factors", "are", "special")))
+glimpse(d)
+```
+
+```
+## Rows: 3
+## Columns: 5
+## $ Integer   &lt;int&gt; 1, 2, 3
+## $ Double    &lt;dbl&gt; 1.0, 2.5, 3.0
+## $ Logical   &lt;lgl&gt; TRUE, FALSE, TRUE
+## $ Character &lt;chr&gt; "strings", "better", "name"
+## $ Factor    &lt;fct&gt; factors, are, special
+```
+
+---
+
+## Data Frames
+
+Elements of shorter length are recycled. Common source of confusion.
+
+
+```r
+data.frame(Length4 = 1:4,
+           Length2 = 1:2,
+           Length1 = 1)
+```
+
+```
+##   Length4 Length2 Length1
+## 1       1       1       1
+## 2       2       2       1
+## 3       3       1       1
+## 4       4       2       1
+```
+
+--
+
+Recycling fails when longer vector is not a multiple of shorter vector.
+
+
+```r
+data.frame(Length4 = 1:4,
+           Length3 = 1:3)
+```
+
+```
+## Error in data.frame(Length4 = 1:4, Length3 = 1:3): arguments imply differing number of rows: 4, 3
+```
+
+---
+
+## Data Frames
+
+Use `head` to preview data frame in console.
+
+
+```r
+head(data.frame(x = 1:100, y = sample(1:100), z = rnorm(100)), n = 10)
+```
+
+```
+##     x  y           z
+## 1   1 72 -1.53084573
+## 2   2 55 -0.01905724
+## 3   3  9 -0.08539660
+## 4   4 25 -0.35450388
+## 5   5 76  0.60203451
+## 6   6 84 -0.63286073
+## 7   7 87 -0.32867354
+## 8   8 93 -0.46678649
+## 9   9 19 -0.13385141
+## 10 10 94  0.06687074
+```
+
+---
+
+## Tibbles
+
+Tibbles are data frames with some special behavior.
+
+
+```r
+data.frame(Number = 1:2,
+           Times2 = Number*2)
+```
+
+```
+## Error in data.frame(Number = 1:2, Times2 = Number * 2): object 'Number' not found
+```
+--
+
+```r
+tibble::tibble(Number = 1:2,
+               Times2 = Number*2)
+```
+
+```
+## # A tibble: 2 x 2
+##   Number Times2
+##    &lt;int&gt;  &lt;dbl&gt;
+## 1      1      2
+## 2      2      4
+```
+
+---
+## Tibbles
+
+Tibbles prevent recycling of vectors to avoid surprises.
+
+
+```r
+data.frame(Length4 = 1:4,
+           Length2 = 1:2)
+```
+
+```
+##   Length4 Length2
+## 1       1       1
+## 2       2       2
+## 3       3       1
+## 4       4       2
+```
+
+
+```r
+tibble(Length4 = 1:4,
+       Length2 = 1:2)
+```
+
+```
+## Error: Tibble columns must have compatible sizes.
+## * Size 4: Existing data.
+## * Size 2: Column `Length2`.
+## i Only values of size one are recycled.
+```
+---
+
+## Tibbles
+
+By default, data frames truncate printing at 333 rows. 
+
+Always use head if you don't know how big a data frame is.
+
+
+```r
+data.frame(x = 1:500, y = sample(1:500), z = rnorm(500))
+```
+
+```
+##       x   y            z
+## 1     1 194 -0.211143135
+## 2     2 191 -0.184418896
+## 3     3 442  1.147012830
+## 4     4 343 -2.822400972
+## 5     5 172 -0.531420207
+## 6     6  31  0.139291933
+## 7     7 111 -0.358422698
+## 8     8 417  0.470408579
+## 9     9 200  0.997671751
+## 10   10 378  0.573607645
+## 11   11 362  0.110385900
+## 12   12 223 -0.462818452
+## 13   13 311 -0.717521605
+## 14   14 432 -0.799985942
+## 15   15 221 -1.772389127
+## 16   16  77 -0.020736303
+## 17   17 318  0.181542340
+## 18   18 204  0.916581776
+## 19   19 461  0.830298992
+## 20   20  98 -1.181473516
+## 21   21 232 -2.482876779
+## 22   22 132 -0.443946411
+## 23   23 363 -0.626858626
+## 24   24 433 -1.344705594
+## 25   25 338 -0.701989097
+## 26   26 278  1.447824613
+## 27   27 230  0.041358674
+## 28   28  40 -0.079528322
+## 29   29 296 -0.302229095
+## 30   30 301 -0.247276160
+## 31   31 157  1.362626571
+## 32   32 490 -2.137633130
+## 33   33   9  0.478361313
+## 34   34 193 -0.001469179
+## 35   35  50  1.000195977
+## 36   36  49  2.004275930
+## 37   37  24  1.334963369
+## 38   38 281 -0.792118847
+## 39   39 189 -0.608280634
+## 40   40 241  0.857261479
+## 41   41 313  1.387355980
+## 42   42  79 -2.058060631
+## 43   43 181 -0.170767670
+## 44   44 398  0.569983245
+## 45   45  17  0.317034648
+## 46   46 226  0.835355741
+## 47   47 334 -1.312321316
+## 48   48  58 -1.166258045
+## 49   49 473  0.458280840
+## 50   50 353  1.196645801
+## 51   51 138 -0.595867003
+## 52   52 315 -0.250926422
+## 53   53 104  1.362375358
+## 54   54 401  0.151595599
+## 55   55 263  0.302724070
+## 56   56 280  0.562104834
+## 57   57 219 -0.352843484
+## 58   58 270 -0.701531867
+## 59   59 121 -0.204822500
+## 60   60  55  0.053305631
+## 61   61 346 -0.012573041
+## 62   62  63 -0.604837747
+## 63   63  56  1.077231727
+## 64   64 100 -0.281709410
+## 65   65 484 -0.700431941
+## 66   66 368 -0.461601122
+## 67   67 396 -1.918133412
+## 68   68 186 -0.829435565
+## 69   69 314 -0.312545312
+## 70   70 422 -0.491988180
+## 71   71 155  0.253928147
+## 72   72  68 -0.234728109
+## 73   73 175 -2.055339278
+## 74   74 103  0.070944141
+## 75   75 324 -0.737517423
+## 76   76  23 -0.560011553
+## 77   77 472  0.250411919
+## 78   78  54 -1.767011893
+## 79   79 358 -1.275989425
+## 80   80 202  0.727844172
+## 81   81 209  0.444467798
+## 82   82 466  0.618059710
+## 83   83 249 -0.183074286
+## 84   84  53  0.438826209
+## 85   85 497 -1.906347797
+## 86   86 113  0.039823734
+## 87   87  27  2.038431910
+## 88   88 454  0.405064011
+## 89   89 319 -0.624800433
+## 90   90 105 -0.334496398
+## 91   91 443 -0.423713074
+## 92   92 178 -2.063513468
+## 93   93 493  0.131629382
+## 94   94 419  0.043623759
+## 95   95 447  1.191643669
+## 96   96 192 -0.815553530
+## 97   97 151 -2.282138366
+## 98   98 182 -0.231884158
+## 99   99 227  0.151239146
+## 100 100 460 -1.053364611
+## 101 101 195 -1.372065854
+## 102 102 444 -1.667268271
+## 103 103   7  0.734980832
+## 104 104 354 -0.780062305
+## 105 105 237 -0.707321000
+## 106 106 404  0.060422401
+## 107 107 355 -0.421582302
+## 108 108 183 -1.001897503
+## 109 109 215 -1.139878766
+## 110 110 106  0.835184819
+## 111 111 336  0.297469142
+## 112 112 414 -0.004937252
+## 113 113 335 -0.443900447
+## 114 114 464  0.117568762
+## 115 115 389 -1.736398690
+## 116 116 171 -1.544418977
+## 117 117  38  0.171862508
+## 118 118 144  0.694674181
+## 119 119 449  1.388714576
+## 120 120 163  0.252089081
+## 121 121 413 -0.141896816
+## 122 122 483 -1.075880477
+## 123 123 160  0.751288307
+## 124 124 244  1.358497274
+## 125 125 456  0.440687368
+## 126 126 256  0.031123107
+## 127 127  67 -2.225016249
+## 128 128 109 -1.026352152
+## 129 129 408 -0.916172014
+## 130 130 407 -0.328357306
+## 131 131 212 -1.009144750
+## 132 132 400 -0.423635590
+## 133 133 320 -0.001167098
+## 134 134 173 -0.804982163
+## 135 135 239  1.083879931
+## 136 136 210  1.024361835
+## 137 137  22  0.217873840
+## 138 138 450 -0.330314523
+## 139 139  26  0.121349524
+## 140 140 262  0.131551658
+## 141 141 124 -0.782880661
+## 142 142 245  0.114155941
+## 143 143 269 -0.996454858
+## 144 144  25 -2.540455006
+## 145 145 284  0.342714745
+## 146 146  52  1.518060081
+## 147 147 250  0.510274213
+## 148 148 257 -0.250067055
+## 149 149  42 -1.421800980
+## 150 150 271  1.020725895
+## 151 151   1 -0.095466819
+## 152 152 283 -0.927187725
+## 153 153  36  1.401297986
+## 154 154 435 -1.700639649
+## 155 155 118 -0.107750740
+## 156 156 445  0.243113555
+## 157 157 382 -0.494123231
+## 158 158 304 -0.391069308
+## 159 159 293  0.849857455
+## 160 160 166 -0.619916399
+## 161 161 228 -0.309138634
+## 162 162 373  1.914287798
+## 163 163 159  1.020237851
+## 164 164 485  0.137508649
+## 165 165 203  0.173009477
+## 166 166 188 -0.088707054
+## 167 167 330  0.520208768
+## 168 168 399 -0.783328506
+## 169 169 287 -0.240149348
+## 170 170 451  0.705902364
+## 171 171  65  1.353555664
+## 172 172 495  0.834226739
+## 173 173 384  0.840365108
+## 174 174  86  0.668034887
+## 175 175 487  1.629034192
+## 176 176 341 -1.009587568
+## 177 177 253  0.795975448
+## 178 178 139 -0.242311952
+## 179 179  84 -0.222481340
+## 180 180 405 -0.375023619
+## 181 181 122 -0.040554267
+## 182 182 196 -1.565416453
+## 183 183 161  0.157698902
+## 184 184  16 -0.927824694
+## 185 185 240 -0.764177370
+## 186 186  21 -0.353410087
+## 187 187 492 -0.585286949
+## 188 188  37  1.467712734
+## 189 189 317  1.363326901
+## 190 190 475 -1.635529034
+## 191 191  30 -1.266275831
+## 192 192 438  0.734810210
+## 193 193  11  0.118034322
+## 194 194 117 -1.609726722
+## 195 195 481 -0.162533160
+## 196 196 266  1.248338845
+## 197 197 426  0.923941898
+## 198 198  74 -0.128537409
+## 199 199  99  0.682968838
+## 200 200 169 -0.351241935
+## 201 201  29  0.628095139
+## 202 202  78 -1.254167565
+## 203 203 220 -1.667404626
+## 204 204 477 -0.844311064
+## 205 205 222 -0.870020544
+## 206 206 168  0.247950624
+## 207 207 350 -1.484867527
+## 208 208  51 -0.712161539
+## 209 209 268  0.017792587
+## 210 210 469 -2.884552924
+## 211 211 375  0.496891419
+## 212 212 467  1.443399725
+## 213 213  57  0.836358564
+## 214 214  70 -1.228831461
+## 215 215 177 -0.040611310
+## 216 216 180  0.129897293
+## 217 217 359  1.171753253
+## 218 218 264  0.797206424
+## 219 219 381 -2.357730303
+## 220 220  43  1.279280204
+## 221 221 294  1.155860279
+## 222 222 134 -2.011707449
+## 223 223 412  1.263878033
+## 224 224 383 -1.058559674
+## 225 225 482 -0.556848123
+## 226 226 217  0.823461534
+## 227 227 185  0.456231205
+## 228 228  20 -1.090878934
+## 229 229  76  0.215829449
+## 230 230 128 -0.125985910
+## 231 231  90  0.262475341
+## 232 232 150 -0.471131225
+## 233 233 342  0.421245717
+## 234 234 152  0.973034156
+## 235 235 137  0.879375590
+## 236 236 282  2.011850703
+## 237 237 279 -0.441538415
+## 238 238 316  0.951746622
+## 239 239  47 -1.586368024
+## 240 240 199 -1.430667624
+## 241 241 295  0.587632086
+## 242 242 463 -0.696401234
+## 243 243 165  0.851418595
+## 244 244 434 -1.246221981
+## 245 245  71 -0.358808232
+## 246 246 234  0.762357162
+## 247 247 251 -0.858723823
+## 248 248  62  1.557177350
+## 249 249 387 -0.052410387
+## 250 250 233 -0.104701039
+## 251 251 429  1.056763807
+## 252 252 179 -0.696510564
+## 253 253 478  0.614536282
+## 254 254  92 -1.024149784
+## 255 255 243  0.435244260
+## 256 256 125 -1.778695896
+## 257 257 327  0.051226530
+## 258 258  60 -1.559996129
+## 259 259 289  1.471510695
+## 260 260 115 -0.059273512
+## 261 261 273 -1.472855949
+## 262 262 299  1.363295812
+## 263 263 208 -0.523054044
+## 264 264 302  2.036221823
+## 265 265  41  0.300750753
+## 266 266 397 -0.774104166
+## 267 267  14  0.710602309
+## 268 268  61 -0.686358796
+## 269 269 331  0.239502269
+## 270 270 101 -1.251452397
+## 271 271 276 -1.484299381
+## 272 272 441  0.433822125
+## 273 273 147 -0.290889304
+## 274 274 153  1.295647496
+## 275 275 297  1.329841005
+## 276 276 298 -0.168840222
+## 277 277 494  1.379599691
+## 278 278  73  1.153588965
+## 279 279 238  0.673638371
+## 280 280  59 -0.401670003
+## 281 281 402 -0.813931418
+## 282 282 176  0.273238746
+## 283 283 370  2.042542701
+## 284 284 394  0.536334362
+## 285 285  94 -0.224269689
+## 286 286 390  0.050964556
+## 287 287 290  0.380462254
+## 288 288 224  1.094780005
+## 289 289 291 -0.665078558
+## 290 290 393 -0.595087128
+## 291 291  64 -0.341588780
+## 292 292 149 -1.317534322
+## 293 293 416 -0.567612032
+## 294 294 167  1.644510331
+## 295 295 366  0.557634682
+## 296 296 458  0.430797660
+## 297 297 457  0.457385211
+## 298 298 427  0.920617403
+## 299 299 431 -0.763549150
+## 300 300 388  1.603691137
+## 301 301 326 -0.776620633
+## 302 302 174  0.701933053
+## 303 303 425 -1.111807373
+## 304 304 254 -2.053219124
+## 305 305 207 -1.945942242
+## 306 306 136 -0.116607130
+## 307 307 206  0.782052042
+## 308 308  93 -0.218135615
+## 309 309  82 -0.557410499
+## 310 310 246 -1.033350075
+## 311 311 198 -1.739285615
+## 312 312 285 -0.277361509
+## 313 313 260  0.133570612
+## 314 314 145  0.805228935
+## 315 315 437 -0.397604278
+## 316 316  45  0.267385844
+## 317 317 365 -0.292285189
+## 318 318  66  0.510138794
+## 319 319 430  0.647902449
+## 320 320 440  0.754490958
+## 321 321 479 -0.316917949
+## 322 322 436  0.157866821
+## 323 323  44  0.269301938
+## 324 324 265 -1.088520673
+## 325 325 148  1.198631610
+## 326 326 110 -1.873426443
+## 327 327 498 -0.129627170
+## 328 328  34 -1.432825318
+## 329 329 131  1.097816413
+## 330 330 480  0.245398841
+## 331 331 120 -0.648537706
+## 332 332 424 -1.675018102
+## 333 333 465  1.183015455
+## 334 334 146 -1.790887744
+## 335 335   6 -0.141639909
+## 336 336 337 -1.745232115
+## 337 337 129  0.248070013
+## 338 338 133  0.787050908
+## 339 339 205  0.099395087
+## 340 340 123 -0.068361919
+## 341 341 272  1.095620456
+## 342 342  13  0.501168380
+## 343 343 127 -0.731313944
+## 344 344 323 -1.466175298
+## 345 345 258 -0.271761727
+## 346 346 288 -1.597331063
+## 347 347 306  0.742306037
+## 348 348   4 -0.964478509
+## 349 349  33 -0.391033834
+## 350 350 357 -0.531665046
+## 351 351  18 -2.906079871
+## 352 352 380  1.006505111
+## 353 353  87 -1.094486967
+## 354 354 376  1.328380120
+## 355 355 499  1.172315532
+## 356 356 459  0.161125258
+## 357 357 184 -0.165525807
+## 358 358 252 -0.433660183
+## 359 359 310  1.152475993
+## 360 360 364  1.300677366
+## 361 361   3 -0.334085519
+## 362 362 164  0.480130442
+## 363 363 229  0.953009313
+## 364 364 116 -0.979668770
+## 365 365 300  1.200661078
+## 366 366 439 -1.325483804
+## 367 367 395  0.813519553
+## 368 368 423 -0.670264131
+## 369 369 112  0.161928994
+## 370 370 410 -0.657267544
+## 371 371  28  1.243257394
+## 372 372 307  1.335325491
+## 373 373 348 -0.396512499
+## 374 374 170  0.450667408
+## 375 375 135  0.987318989
+## 376 376 421 -1.028039649
+## 377 377 377  0.484048742
+## 378 378  91 -1.125084211
+## 379 379 305  1.112876848
+## 380 380 411  0.388892012
+## 381 381 446  0.809491787
+## 382 382 141  0.091965489
+## 383 383 119  0.991677068
+## 384 384 455  0.514600532
+## 385 385 500 -0.541717375
+## 386 386 236  0.130771519
+## 387 387 420 -1.975811273
+## 388 388 344 -0.405124717
+## 389 389 452 -0.734692641
+## 390 390 415  0.522789554
+## 391 391  95  0.017124411
+## 392 392  83  1.399635831
+## 393 393 114  0.020167718
+## 394 394 275 -2.096804569
+## 395 395 453  0.261612127
+## 396 396 140  0.317834780
+## 397 397 162 -1.449463946
+## 398 398 418 -0.563943814
+## 399 399 321 -1.726640106
+## 400 400 356  2.060463105
+## 401 401 374 -0.833536818
+## 402 402 486  0.570330580
+## 403 403 130 -1.184974231
+## 404 404 448 -0.332370968
+## 405 405 218  1.075480545
+## 406 406  96 -0.379088441
+## 407 407 259 -0.647123285
+## 408 408 201  1.733061726
+## 409 409 340 -0.269137234
+## 410 410  89 -0.012528244
+## 411 411 428  0.055044085
+## 412 412 333  0.270467073
+## 413 413 409  1.046840654
+## 414 414  46 -2.579615633
+## 415 415 216 -1.601687211
+## 416 416   5 -0.207457873
+## 417 417 261  0.482341018
+## 418 418 225 -0.916271693
+## 419 419 248  1.056195302
+## 420 420 470 -0.670094461
+## 421 421 474 -0.328682218
+## 422 422 242  0.693043652
+## 423 423  15  0.640243768
+## 424 424   8  0.701518930
+## 425 425 286 -0.376633664
+## 426 426 352  0.724061749
+## 427 427 468  1.186743382
+## 428 428 489  0.698961634
+## 429 429  85  0.573597211
+## 430 430 496 -0.414090319
+## 431 431 303  0.613728853
+## 432 432 143 -0.610423009
+## 433 433  69  0.202506139
+## 434 434 277 -1.647954772
+## 435 435 471  0.086561921
+## 436 436  75  0.780915780
+## 437 437 108  1.125628028
+## 438 438  35 -1.461439554
+## 439 439 345 -1.494667684
+## 440 440 322 -0.217992922
+## 441 441 312  2.391011732
+## 442 442 379  0.111875685
+## 443 443  81 -0.046085890
+## 444 444 385  0.425279515
+## 445 445 476 -0.388441871
+## 446 446 255  1.253082899
+## 447 447 332  0.826611853
+## 448 448 107 -1.315036004
+## 449 449 154 -0.664692782
+## 450 450   2  2.093426842
+## 451 451 369 -0.136458226
+## 452 452  88  0.091892816
+## 453 453 371  0.645134818
+## 454 454 491 -2.367416252
+## 455 455 197 -1.668376531
+## 456 456 187  2.107840901
+## 457 457 386  0.732451347
+## 458 458  72  0.173584175
+## 459 459 267 -0.968647249
+## 460 460 488 -1.366100278
+## 461 461 361  1.037259740
+## 462 462 213  0.928358716
+## 463 463 349 -0.674001371
+## 464 464  97 -0.943271157
+## 465 465 339 -2.228053706
+## 466 466  19 -0.047569893
+## 467 467 391 -1.320479322
+## 468 468 329  0.009415483
+## 469 469 292 -1.336859795
+## 470 470 403  1.502687700
+## 471 471 126 -0.637934537
+## 472 472 102  1.224099260
+## 473 473  12  0.189084413
+## 474 474 392 -2.001677415
+## 475 475 308 -0.308494741
+## 476 476 462  1.380974787
+## 477 477 367 -1.534890416
+## 478 478 142 -1.483529948
+## 479 479 247 -0.723075149
+## 480 480 235  1.408091700
+## 481 481 406  0.681385012
+## 482 482  10  0.340034517
+## 483 483 156 -0.767558748
+## 484 484  48 -0.115416129
+## 485 485 231 -0.189741588
+## 486 486  80  0.623200068
+## 487 487 211 -1.692757094
+## 488 488 325  0.014203957
+## 489 489 309 -1.172557090
+## 490 490 372  0.009158376
+## 491 491 351  0.519794430
+## 492 492 158  2.221592919
+## 493 493 274  0.179667032
+## 494 494 360 -0.076532566
+## 495 495 190  2.070351201
+## 496 496 328 -2.661154406
+## 497 497  39  0.285883113
+## 498 498  32 -0.413832438
+## 499 499 347  1.845558703
+## 500 500 214  0.915545192
+```
+
+---
+
+## Tibbles
+
+Tibbles have enhanced (and opinionated) printing behavior.
+
+
+```r
+tibble::tibble(x = 1:500, y = sample(1:500), z = rnorm(500))
+```
+
+```
+## # A tibble: 500 x 3
+##        x     y      z
+##    &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+##  1     1   433 -0.477
+##  2     2   347 -1.36 
+##  3     3   437  0.619
+##  4     4   356 -0.630
+##  5     5   269  0.223
+##  6     6   398  0.184
+##  7     7   274  2.04 
+##  8     8   483 -1.42 
+##  9     9   360 -0.425
+## 10    10    58  0.506
+## # ... with 490 more rows
+```
+
+---
+
+## Working Directory
+
+A key part of reading and writing data is understanding where R is looking for and putting data, respectively.
+
+
+```r
+getwd()
+```
+
+```
+## [1] "C:/Users/thinkelman/GitHub/R/Projects/R-Intro-Training/Slides"
+```
+
+--
+
+`getwd` returns absolute paths, but using relative paths makes work more reproducible across different computers.
+
+--
+
+[Project-oriented workflow](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+&gt;If the first line of your R script is
+`setwd("C:\Users\jenny\path\that\only\I\have")`  
+I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.  
+
+
+---
+
+## Writing Data
+
+---
+
+## Reading Data
+
+---
+
+## Saving Workspace
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
