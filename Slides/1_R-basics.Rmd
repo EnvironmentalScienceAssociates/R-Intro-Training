@@ -1,45 +1,93 @@
 ---
 title: "Introduction to R for Excel Users"
-author: "Travis Hinkelman & Taylor Spaulding"
+author: 
+  - "Travis Hinkelman"
+  - "Taylor Spaulding"
 date: "2020-11-20"
-output: ioslides_presentation
-widescreen: true
-css: styles.css
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#699CC6",
+  secondary_color = "#F9A134",
+  inverse_header_color = "#FFFFFF"
+)
 ```
 
 ## Motivation
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:375px"> 
-<img src="https://www.r-project.org/logo/Rlogo.png" style = "height:375px; padding-left:50px">  
+.pull-left[
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:300px"> 
 
+]
+.pull-right[
+<img src="https://www.r-project.org/logo/Rlogo.png"  style="height:300px">  
+]
+
+---
 ## Motivation
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:375px"> 
-<img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png" style = "height:375px; padding-left:125px">  
+.pull-left[
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Microsoft_Office_Excel_%282018%E2%80%93present%29.svg/500px-Microsoft_Office_Excel_%282018%E2%80%93present%29.svg.png" style="height:300px"> 
 
-## R
+]
+.pull-right[
+<img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png"  style="height:300px; padding-left:80px">  
+]
 
-<img src="https://developers.refinitiv.com/content/dam/devportal/articles/setup-jupyter-notebook-for-r/step1_installr.png" style = "height:450px;  padding-left:225px">  
+---
+## Rterm
 
+<img src="/Slides/img/Rterm.png"> 
+
+---
+## RGui
+
+```{r echo = TRUE}
+knitr::include_graphics("/Slides/img/RGui.png", error = FALSE)
+```
+
+---
 ## RStudio
 
-<img src="https://data.princeton.edu/R/RStudioIDE.png" style = "height:450px;  padding-left:200px">
+knitr::include_graphics("Slides/img/RStudio.png", error = FALSE)
 
+---
 ## Data Structures
 
 One advantage of Excel is that the data are front and center. Feels tangible.
 
-Important to feel comfortable with R's tools for showing the shape and structure of your data.
+--
+
+Important to feel comfortable with R's functions for showing the shape and structure of your data, e.g., `length`, `dim`, `nrow`, `head`, `View`, `glimpse`, `summary`.
+
+--
 
 A good mental model of the shape and structure of your data helps you understand the code that you need to write to analyze that data.
 
+--
+
 R has four main data structures: vector, matrix/array, list, and data frame.
 
+--
+
 We will focus on vectors and data frames.
+
+---
 
 ## Vectors
 
@@ -47,9 +95,17 @@ Combine elements into a vector with `c` (for **c**ombine or **c**oncatenate).
 
 ```{r echo = TRUE}
 c(1, 2, 3)
+```
+--
+```{r echo = TRUE}
 c("a", "b", "c")
+```
+--
+```{r echo = TRUE}
 c(TRUE, FALSE, TRUE)
 ```
+
+---
 
 ## Vectors
 
@@ -57,18 +113,39 @@ All elements of a vector must be the same type. Type coercion is implicit and a 
 
 ```{r echo = TRUE}
 c(1, 2, "a", "b")
+```
+--
+```{r echo = TRUE}
 c(1, 2, TRUE, FALSE)
+```
+--
+```{r echo = TRUE}
 c("a", "b", TRUE, FALSE)
 ```
+
+---
+
 ## Vectors
 
 Create numeric sequences with `:` or `seq`.
 
 ```{r echo = TRUE}
 1:5
+```
+--
+```{r echo = TRUE}
+2:-3
+```
+--
+```{r echo = TRUE}
 seq(from = 1, to = 5, by = 1)
+```
+--
+```{r echo = TRUE}
 seq(3, 1, -0.5)
 ```
+
+---
 
 ## Vectors
 
@@ -76,9 +153,17 @@ Many operations in R are "vectorized."
 
 ```{r echo = TRUE}
 seq(2, 10, 2) / 2
+```
+--
+```{r echo = TRUE}
 sqrt(c(1, 4, 9, 16))
+```
+--
+```{r echo = TRUE}
 0:5 + 10:15
 ```
+
+---
 
 ## Data Frames
 
@@ -92,9 +177,11 @@ data.frame(Integer = 1L:3L,
            Factor = as.factor(c("factors", "are", "special")))
 ```
 
+---
+
 ## Data Frames
 
-Examine data frame structure with `str`.
+Examine data frame structure with `glimpse`.
 
 ```{r echo = TRUE}
 d <- data.frame(Integer = 1L:3L,
@@ -102,8 +189,10 @@ d <- data.frame(Integer = 1L:3L,
                 Logical = c(TRUE, FALSE, TRUE),
                 Character = c("strings", "better", "name"),
                 Factor = as.factor(c("factors", "are", "special")))
-str(d)
+glimpse(d)
 ```
+
+---
 
 ## Data Frames
 
@@ -115,6 +204,8 @@ data.frame(Length4 = 1:4,
            Length1 = 1)
 ```
 
+---
+
 ## Data Frames
 
 Recycling fails when longer vector is not a multiple of shorter vector.
@@ -124,6 +215,8 @@ data.frame(Length4 = 1:4,
            Length3 = 1:3)
 ```
 
+---
+
 ## Data Frames
 
 Use `head` to preview data frame in console.
@@ -132,15 +225,7 @@ Use `head` to preview data frame in console.
 head(data.frame(x = 1:100, y = sample(1:100), z = rnorm(100)), n = 10)
 ```
 
-## Data Frames
-
-Extract columns with `$` and operate on them as vectors.
-
-```{r echo = TRUE}
-(d <- data.frame(Smolt = c(10000, 12000, 8000),
-                 Adult = c(12, 6, 8)))
-d$SAR <- d$Adult/d$Smolt; d
-```
+---
 
 ## Tibbles
 
@@ -149,9 +234,14 @@ Tibbles are data frames with some special behavior.
 ```{r echo = TRUE, error=TRUE}
 data.frame(Number = 1:2,
            Times2 = Number*2)
+```
+--
+```{r echo = TRUE}
 tibble::tibble(Number = 1:2,
                Times2 = Number*2)
 ```
+
+---
 
 ## Tibbles
 
@@ -161,6 +251,8 @@ By default, data frames truncate printing at 333 rows. Always use head if you do
 data.frame(x = 1:500, y = sample(1:500), z = rnorm(500))
 ```
 
+---
+
 ## Tibbles
 
 Tibbles have enhanced (and opinionated) printing behavior.
@@ -169,4 +261,7 @@ Tibbles have enhanced (and opinionated) printing behavior.
 tibble::tibble(x = 1:500, y = sample(1:500), z = rnorm(500))
 ```
 
+---
+
 ## Reading Data
+
