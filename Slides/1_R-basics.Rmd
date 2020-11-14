@@ -177,15 +177,15 @@ Create numeric sequences with `:` or `seq`.
 ```
 --
 ```{r echo = TRUE}
-2:-3
-```
---
-```{r echo = TRUE}
 seq(from = 1, to = 5, by = 1)
 ```
 --
 ```{r echo = TRUE}
 seq(3, 1, -0.5)
+```
+--
+```{r echo = TRUE}
+2:-3
 ```
 
 ---
@@ -372,11 +372,41 @@ I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.
 
 ## Writing Data
 
+Datasets can be included in packages. `esaRmisc` contains a dataset with water year type classifications.
+
+```{r echo = TRUE}
+library(esaRmisc)
+tail(water_year_type)
+```
+
+We can write the `water_year_type` dataset as a `CSV` file with `write_csv` and as an `XSLX` file with `write_xlsx` (but need to install `writexl` package first).
+
+```{r echo = TRUE, eval = FALSE}
+write_csv(water_year_type, "WaterYearType.csv")
+writexl::write_xlsx(water_year_type, "WaterYearType.xlsx")
+```
+
 ---
 
 ## Reading Data
 
+Let's read those files back into R (but need to install `readxl` package first).
+
+```{r echo = TRUE, eval = FALSE}
+wyt_csv <- read_csv("WaterYearType.csv")
+wyt_xlsx <- readxl::read_xlsx("WaterYearType.xlsx")
+```
+
+--
+
+R can connect to and read from lots of different data sources and file types, but we will focus on flat text files (generally, `CSV`, `TSV`, or `TXT`) and Excel files (`XLSX`).
+
+
 ---
 
 ## Saving Workspace
+
+Restore .RData into workspace at startup --> **No**
+
+Save workspace to .RData on exit --> **Never**
 
