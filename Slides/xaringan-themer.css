@@ -259,3 +259,12 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: var(--black);
 }
 
+
+
+/* Extra CSS */
+.title-slide {
+  background-color: #FFFFFF;
+}
+.title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
+  color: #699CC6;
+}

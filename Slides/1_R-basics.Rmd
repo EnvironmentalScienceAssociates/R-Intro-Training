@@ -24,8 +24,10 @@ library(xaringanthemer)
 style_duo_accent(
   primary_color = "#699CC6",
   secondary_color = "#F9A134",
-  inverse_header_color = "#FFFFFF"
-)
+  inverse_header_color = "#FFFFFF",
+  extra_css = list(".title-slide" = list("background-color" = "#FFFFFF"),
+                   ".title-slide, .title-slide h1, .title-slide h2, .title-slide h3" = 
+                     list("color" = "#699CC6")))
 ```
 
 ## Motivation
@@ -400,13 +402,4 @@ wyt_xlsx <- readxl::read_xlsx("WaterYearType.xlsx")
 --
 
 R can connect to and read from lots of different data sources and file types, but we will focus on flat text files (generally, `CSV`, `TSV`, or `TXT`) and Excel files (`XLSX`).
-
-
----
-
-## Saving Workspace
-
-Restore .RData into workspace at startup --> **No**
-
-Save workspace to .RData on exit --> **Never**
 
