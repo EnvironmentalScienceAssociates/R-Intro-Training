@@ -15,7 +15,7 @@ library(gridExtra)
 
 # Arranging multipled plots on a single page
 # first load in the Pokemon dataset. 
-poke <- read.csv("Pokemon.csv")
+poke <- read.csv(file.path("Data", "Pokemon.csv"))
 
 poke <- poke %>%
   mutate_if(., is.factor, as.character)

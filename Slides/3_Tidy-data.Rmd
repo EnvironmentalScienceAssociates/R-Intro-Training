@@ -1,0 +1,15 @@
+---
+title: "Tidy data"
+author: "Travis Hinkelman"
+date: "2020-12-18"
+output: ioslides_presentation
+widescreen: true
+css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Slide 1
+
