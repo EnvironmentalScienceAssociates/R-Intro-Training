@@ -6,5 +6,5 @@ This webpage provides materials for internal training sessions at [ESA](https://
 
 ### R Basics (2020-11-20)
 
-[Slides](https://environmentalscienceassociates.github.io/R-Intro-Training/1_R-basics.html)  
+[Slides](/slides/1_R-basics.html)  
 [R script](https://github.com/EnvironmentalScienceAssociates/R-Intro-Training/blob/master/Scripts/1_R-basics.R)
