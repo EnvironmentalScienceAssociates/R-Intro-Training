@@ -1,37 +1,10 @@
-## Welcome to GitHub Pages
+## Introduction to R for Excel Users
 
-You can use the [editor on GitHub](https://github.com/EnvironmentalScienceAssociates/R-Intro-Training/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+### Overview
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This webpage provides materials for internal training sessions at [ESA](https://esassoc.com/) in [R](https://www.r-project.org/) with an emphasis on the [tidyverse](https://www.tidyverse.org/) collection of packages, particularly [dplyr](https://dplyr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), and [ggplot2](https://ggplot2.tidyverse.org/). The materials are targeted at people with no R experience. The focus of the materials is on data wrangling and visualization with the stucture roughly following the books, [R for Data Science](https://r4ds.had.co.nz/) and [ggplot2: Elegant Graphics for Data Analysis](https://ggplot2-book.org). The goal is to provide training in efficient and reproducible workflows as an alternative to work that is typically done in Excel.
 
-### Markdown
+### R Basics (2020-11-20)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/EnvironmentalScienceAssociates/R-Intro-Training/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+[Slides](https://environmentalscienceassociates.github.io/R-Intro-Training/1_R-basics.html)  
+[R script](https://github.com/EnvironmentalScienceAssociates/R-Intro-Training/blob/master/Scripts/1_R-basics.R)
