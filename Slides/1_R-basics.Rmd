@@ -307,8 +307,8 @@ data.frame(Number = 1:2,
 ```
 --
 ```{r echo = TRUE}
-tibble::tibble(Number = 1:2,
-               Times2 = Number*2)
+tibble(Number = 1:2,
+       Times2 = Number*2)
 ```
 
 ---
@@ -344,7 +344,7 @@ data.frame(x = 1:500, y = sample(1:500), z = rnorm(500))
 Tibbles have enhanced (and opinionated) printing behavior.
 
 ```{r echo = TRUE, error=TRUE}
-tibble::tibble(x = 1:500, y = sample(1:500), z = rnorm(500))
+tibble(x = 1:500, y = sample(1:500), z = rnorm(500))
 ```
 
 ---
