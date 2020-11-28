@@ -1,15 +1,164 @@
 ---
-title: "Data transformation"
-author: "Travis Hinkelman"
-date: "2020-12-04"
-output: ioslides_presentation
-widescreen: true
-css: styles.css
+title: "Data Transformation"
+author: 
+  - "Travis Hinkelman"
+date: "2020-11-27"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+options(htmltools.dir.version = FALSE)
 ```
 
-## Slide 1
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#699CC6",
+  secondary_color = "#F9A134",
+  inverse_header_color = "#FFFFFF",
+  extra_css = list(".title-slide" = list("background-color" = "#FFFFFF"),
+                   ".title-slide, .title-slide h1, .title-slide h2, .title-slide h3" = 
+                     list("color" = "#699CC6")))
+```
 
+## Texas Housing Dataset
+
+Texas housing dataset is included in `ggplot2` package (included in `tidyverse`). 
+
+```{r echo = TRUE, message=FALSE}
+library(tidyverse)
+```
+
+--
+
+Get dimensions of dataframe.
+
+```{r echo = TRUE}
+dim(txhousing)
+```
+
+--
+
+Or just get the number of rows.
+
+```{r echo = TRUE}
+nrow(txhousing)
+```
+
+---
+
+## Texas Housing Dataset
+
+Get the column names.
+
+```{r echo = TRUE}
+names(txhousing)
+```
+
+--
+
+Get first five rows. 
+
+```{r echo = TRUE}
+head(txhousing, 5)
+```
+
+---
+
+## Texas Housing Dataset
+
+Get rows 101-110.
+
+```{r echo = TRUE}
+txhousing[101:110, ]
+```
+
+---
+
+## Filter
+
+Find all unique values in the year column and print the first 10.
+
+```{r echo = TRUE}
+unique(txhousing$year)[1:10]
+```
+
+--
+
+Filter `txhousing` to keep rows where `year` is 2008. 
+
+```{r echo = TRUE}
+head(filter(txhousing, year == 2008))
+```
+
+---
+
+## Filter
+
+Filter `txhousing` to keep rows where `year` is 2008 **and** `city` is Lubbock. 
+
+```{r echo = TRUE}
+filter(txhousing, year == 2008 & city == "Lubbock")
+```
+
+---
+
+## Filter
+
+Filter `txhousing` to keep rows where `year` is 2008 **or** `city` is Lubbock. 
+
+```{r echo = TRUE}
+filter(txhousing, year == 2008 | city == "Lubbock")
+```
+
+---
+
+## Filter
+
+Filter `txhousing` to keep rows where `year` is 2006-2010. 
+
+```{r echo = TRUE}
+df1 <- filter(txhousing, year > 2005 & year <= 2010)
+unique(df1$year)
+```
+
+--
+
+`%in%` provides more convenient syntax to get same result.
+
+```{r echo = TRUE}
+df2 <- filter(txhousing, year %in% 2006:2010)
+unique(df2$year)
+```
+
+---
+
+## Filter
+
+Filter `txhousing` to keep rows where `city` is not equal to Lubbock. 
+
+```{r echo = TRUE}
+df3 <- filter(txhousing, city != "Lubbock")
+```
+
+Check if Lubbock is found in `city` column of `df3` dataframe.
+
+```{r echo = TRUE}
+"Lubbock" %in% df3$city
+```
+
+--
+
+Filter `txhousing` to keep rows where `year` is not in the vector `2006:2010`. 
+
+```{r echo = TRUE}
+df4 <- filter(txhousing, !(year %in% 2006:2010))
+unique(df4$year)
+```
