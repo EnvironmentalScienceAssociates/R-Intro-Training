@@ -2,7 +2,7 @@
 title: "Data Transformation"
 author: 
   - "Travis Hinkelman"
-date: "2020-11-27"
+date: "2020-12-04"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -34,6 +34,14 @@ Texas housing dataset is included in `ggplot2` package (included in `tidyverse`)
 
 ```{r echo = TRUE, message=FALSE}
 library(tidyverse)
+```
+
+--
+
+Open documentation to read dataset description.
+
+```{r echo = TRUE, eval=FALSE}
+?txhousing
 ```
 
 --
@@ -161,4 +169,239 @@ Filter `txhousing` to keep rows where `year` is not in the vector `2006:2010`.
 ```{r echo = TRUE}
 df4 <- filter(txhousing, !(year %in% 2006:2010))
 unique(df4$year)
+```
+
+---
+
+## Filter
+
+Filter `txhousing` to keep rows where `median` is missing. 
+
+```{r echo = TRUE}
+filter(txhousing, is.na(median))
+```
+
+---
+
+## Filter
+
+Filter only retains rows where the expression is `TRUE`, i.e., `NA` is dropped.
+
+```{r echo = TRUE}
+nrow(filter(txhousing, median > 0))
+```
+
+--
+
+Use `!is.na` to be more explicit about your intent to drop rows with `NA`.
+
+```{r echo = TRUE}
+nrow(filter(txhousing, !is.na(median)))
+```
+
+--
+
+If you want to retain `NA`, you need to include it in `filter` expression.
+
+```{r echo = TRUE}
+nrow(filter(txhousing, is.na(median) | median > 0))
+```
+
+---
+
+## Arrange
+
+Arrange `txhousing` to sort ascending by `median` column.
+
+```{r echo = TRUE}
+head(arrange(txhousing, median), 3)
+```
+
+--
+
+Arrange `txhousing` to sort descending by `median` column.
+
+```{r echo = TRUE}
+head(arrange(txhousing, desc(median)), 3)
+```
+
+---
+
+## Arrange
+
+If you arrange rows based on multiple columns, each additional column sorts within groupings (if any) defined by previous columns (listed left to right).
+
+```{r echo = TRUE}
+arrange(txhousing, desc(city), median)
+```
+
+---
+
+## Arrange
+
+Missing values are placed at end of dataframe.
+
+```{r echo = TRUE}
+df5 <- tibble(Col1 = c(2, NA, 1), Col2 = c("A", "T", "R"))
+arrange(df5, Col1)
+```
+
+--
+
+```{r echo = TRUE}
+arrange(df5, desc(Col1))
+```
+
+---
+
+## Select
+
+Select `date`, `city`, and `median` columns from `txhousing`.
+
+```{r echo = TRUE}
+select(txhousing, date, city, median)
+```
+
+---
+
+## Select
+
+Drop `city`, `year`, and `month` columns from `txhousing`.
+
+```{r echo = TRUE}
+head(select(txhousing, -city, -year, -month), 3)
+```
+
+--
+
+```{r echo = TRUE}
+head(select(txhousing, -c(city, year, month)), 3)
+```
+
+---
+
+## Select
+
+Select consecutive columns.
+
+```{r echo = TRUE}
+head(select(txhousing, sales:date), 3)
+```
+
+--
+
+Drop consecutive columns (note the parentheses around `sales:date`).
+
+```{r echo = TRUE}
+head(select(txhousing, -(sales:date)), 3)
+```
+
+---
+
+## Select
+
+A few helper functions available for more flexible `select` operations, e.g., `starts_with`, `ends_with`, `contains`.
+
+```{r echo = TRUE}
+head(select(txhousing, contains("e")))
+```
+
+---
+
+## Select
+
+Rename while selecting.
+
+```{r echo = TRUE}
+select(txhousing, city, year, month, median_sale_price = median)
+```
+
+---
+
+## Rename
+
+Rename without selecting.
+
+```{r echo = TRUE}
+rename(txhousing, median_sale_price = median)
+```
+
+---
+
+## Pipe Operator
+
+A series of operations on a dataframe can create a lot of intermediate outputs.
+
+```{r echo = TRUE}
+df7 <- filter(txhousing, city == "Lubbock")
+df8 <- arrange(df7, desc(year))
+df9 <- select(df8, city, year, month, median)
+```
+
+The pipe operator `%>%` takes the results of the function on the left and passes it as the first argument to the function on the right. [Insert `%>%` with keyboard shortcut `Ctrl` + `Shift` + `m`.]
+
+```{r echo = TRUE, eval=FALSE}
+txhousing %>% 
+  filter(city == "Lubbock") %>% 
+  arrange(desc(year)) %>% 
+  select(city, year, month, median)
+```
+
+---
+
+## Mutate
+
+Create a tibble, sum `Juvenile` and `Adult` columns to create `Total`, divide `Adult` by total to create `PropTotal`, and add `Site` with `A` repeated for every row.
+
+```{r echo = TRUE}
+tibble(Day = 1:5, 
+       Juvenile = round(runif(length(Day), 0, 100)), 
+       Adult = round(runif(length(Day), 0, 20))) %>% 
+  mutate(Total = Juvenile + Adult, 
+         PropAdult = Adult/Total, 
+         Site = "A")
+```
+
+---
+
+## Group By and Summarize
+
+```{r echo = TRUE}
+txhousing %>% 
+  filter(city == "Dallas" & year > 2004) %>% 
+  group_by(year) %>% 
+  summarize(avg_median = mean(median, na.rm = TRUE)) %>% 
+  head(8)
+```
+
+---
+
+## Group By and Summarize
+
+```{r echo = TRUE}
+txhousing %>% 
+  filter(city %in% c("Dallas", "Houston") & year %in% 2006:2010) %>% 
+  group_by(city, year) %>% 
+  summarize(avg_median = mean(median, na.rm = TRUE))
+```
+
+---
+
+## Group By and Filter
+
+```{r echo = TRUE}
+txhousing %>% 
+  group_by(city) %>% 
+  filter(median > quantile(median, probs = 0.9, na.rm = TRUE))
+```
+
+---
+
+## Group By and Mutate
+
+```{r echo = TRUE}
+txhousing %>% 
+  group_by(year) %>% 
+  mutate(prop_max = median/max(median, na.rm = TRUE)) %>% 
+  select(city, year, month, median, prop_max)
 ```
