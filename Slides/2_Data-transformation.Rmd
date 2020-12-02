@@ -82,28 +82,32 @@ head(txhousing, 5)
 
 ## Texas Housing Dataset
 
-Get rows 101-110.
+Get rows 105-110.
 
 ```{r echo = TRUE}
-txhousing[101:110, ]
+txhousing[106:110, ]
+```
+
+--
+
+Find all unique values in the year column.
+
+```{r echo = TRUE, eval = FALSE}
+unique(txhousing$year)
+```
+
+```{r echo = FALSE, out.height = '40%'}
+print(unique(txhousing$year), width = 70)
 ```
 
 ---
 
 ## Filter
 
-Find all unique values in the year column and print the first 10.
-
-```{r echo = TRUE}
-unique(txhousing$year)[1:10]
-```
-
---
-
 Filter `txhousing` to keep rows where `year` is 2008. 
 
 ```{r echo = TRUE}
-head(filter(txhousing, year == 2008))
+filter(txhousing, year == 2008)
 ```
 
 ---
@@ -139,7 +143,7 @@ unique(df1$year)
 
 --
 
-`%in%` provides more convenient syntax to get same result.
+`%in%` provides more convenient way to get same result.
 
 ```{r echo = TRUE}
 df2 <- filter(txhousing, year %in% 2006:2010)
@@ -333,33 +337,49 @@ rename(txhousing, median_sale_price = median)
 A series of operations on a dataframe can create a lot of intermediate outputs.
 
 ```{r echo = TRUE}
-df7 <- filter(txhousing, city == "Lubbock")
-df8 <- arrange(df7, desc(year))
-df9 <- select(df8, city, year, month, median)
+lubbock1 <- filter(txhousing, city == "Lubbock")
+lubbock2 <- arrange(lubbock1, desc(year))
+lubbock3 <- select(lubbock2, city, year, month, median)
 ```
+
+--
+
+Or can be hard to read if written as nested function calls.
+
+```{r echo = TRUE, eval=FALSE}
+lubbock <- 
+  select(
+    arrange(
+      filter(txhousing, city == "Lubbock"), 
+      desc(year)), 
+    city, year, month, median)
+```
+
+---
+
+## Pipe Operator
 
 The pipe operator `%>%` takes the results of the function on the left and passes it as the first argument to the function on the right. [Insert `%>%` with keyboard shortcut `Ctrl` + `Shift` + `m`.]
 
-```{r echo = TRUE, eval=FALSE}
-txhousing %>% 
+```{r echo = TRUE}
+lubbock <- txhousing %>% 
   filter(city == "Lubbock") %>% 
   arrange(desc(year)) %>% 
   select(city, year, month, median)
+head(lubbock)
 ```
 
 ---
 
 ## Mutate
 
-Create a tibble, sum `Juvenile` and `Adult` columns to create `Total`, divide `Adult` by total to create `PropTotal`, and add `Site` with `A` repeated for every row.
+Change names in `city` column to be all uppercase. Add a new column `avg_sale` from dividing `volume` by `sales`.
 
 ```{r echo = TRUE}
-tibble(Day = 1:5, 
-       Juvenile = round(runif(length(Day), 0, 100)), 
-       Adult = round(runif(length(Day), 0, 20))) %>% 
-  mutate(Total = Juvenile + Adult, 
-         PropAdult = Adult/Total, 
-         Site = "A")
+txhousing %>% 
+  mutate(city = toupper(city),        
+         avg_sale = volume/sales) %>% 
+  select(city, year, month, volume, sales, median, avg_sale)
 ```
 
 ---
