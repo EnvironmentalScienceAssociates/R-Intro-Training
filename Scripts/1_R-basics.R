@@ -1,5 +1,5 @@
-## This script contains the code described in the Rmarkdown file found here:
-## https://github.com/EnvironmentalScienceAssociates/R-Intro-Training/blob/master/Slides/1_R-basics.Rmd
+## This script contains the code described in these slides:
+## https://www.travishinkelman.com/r-intro-training/r-basics/
 
 library(tidyverse)
 
