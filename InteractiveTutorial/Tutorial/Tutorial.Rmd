@@ -1,0 +1,354 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(esaRmisc)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## R Basics
+
+### R and RStudio
+
+```{r r-rstudio}
+quiz(
+  question("You can use R without installing RStudio",
+    answer("True", correct = TRUE),
+    answer("False")
+  ),
+  question("You can use RStudio without installing R",
+    answer("True"),
+    answer("False", correct = TRUE)
+  )
+)
+```
+
+### Packages
+
+```{r packages}
+quiz(
+  question("What is the main package repository for R?",
+    answer("CPAN"),
+    answer("CRAN", correct = TRUE),
+    answer("PyPI"),
+    answer("Cargo"),
+    answer("NuGet")
+  ),
+  question("Which package allows you to install packages directly from GitHub?",
+    answer("BiocManager"),
+    answer("githubR"),
+    answer("remotes", correct = TRUE),
+    answer("installr")
+  )
+)
+```
+
+### Vectors 
+
+Fix the following code to create a vector with the numbers 1, 2, 3:
+
+```{r vec-123, exercise=TRUE}
+(1 2 3)
+```
+
+The following code creates a vector of the whole numbers from 1 to 5. Write code that creates a vector with whole numbers from 5 to 1. 
+```{r seq-rev, exercise=TRUE, exercise.eval=TRUE}
+1:5
+```
+
+```{r seq-rev-hint}
+5:1
+seq(5, 1, -1)
+rev(1:5)
+```
+
+Fix the code to create a vector that ranges from 3 to 1 in increments of 0.5.
+```{r seq-err, exercise=TRUE}
+seq(1, 3, -0.5)
+```
+
+```{r seq-err-hint}
+seq(3, 1, -0.5)
+seq(to = 1, from = 3, by = -0.5)
+```
+
+Add a line of code to multiply every element of the vector `x` by 2. 
+```{r div-2, exercise=TRUE, exercise.eval=TRUE}
+x <- seq(1, 5, 0.5)
+```
+
+```{r div-2-hint}
+x*2
+```
+
+Fix the error in this code.
+```{r miss-quotes, exercise=TRUE}
+paste0(c("flood", "dragon"), c(plain, "fly"))
+```
+
+```{r miss-quotes-hint}
+paste0(c("flood", "dragon"), c("plain", "fly"))
+```
+
+### Tibble
+
+Fix the errors in this code.
+```{r tibble-err, exercise=TRUE}
+tibble(Integer = 1L:3L
+       Double = c(1, 2.5; 3),
+       Logical = c(TRUE FALSE TRUE),
+       Character = ("strings", "better", "name"),
+       Factor = as.factor(c("factors", "are", "special")))
+```
+
+```{r tibble-err-hint}
+tibble(Integer = 1L:3L,
+       Double = c(1, 2.5, 3),
+       Logical = c(TRUE, FALSE, TRUE),
+       Character = c("strings", "better", "name"),
+       Factor = as.factor(c("factors", "are", "special")))
+```
+
+## Data Transformation
+
+### Filter
+
+Change the code to return rows where `WaterYearType` is `Wet`.
+```{r filter-wyt, exercise=TRUE}
+filter(water_year_type, WaterYearType == "Above Normal")
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is `Critical` in the `SAC` valley.
+```{r filter-crit, exercise=TRUE}
+
+```
+
+```{r filter-crit-hint}
+filter(water_year_type, WaterYearType == "Critical" & Valley == "SAC")
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is `NA`.
+```{r filter-na, exercise=TRUE}
+
+```
+
+```{r filter-na-hint}
+filter(water_year_type, is.na(WaterYearType))
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is not `NA`.
+```{r filter-not-na, exercise=TRUE}
+
+```
+
+```{r filter-not-na-hint}
+filter(water_year_type, !is.na(WaterYearType))
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is `NA` or `Dry`.
+```{r filter-na-or, exercise=TRUE}
+
+```
+
+```{r filter-na-or-hint}
+filter(water_year_type, is.na(WaterYearType) | WaterYearType == "Dry")
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is `Critical` or `Dry`.
+```{r filter-in, exercise=TRUE}
+
+```
+
+```{r filter-in-hint}
+filter(water_year_type, WaterYearType %in% c("Critical", "Dry"))
+# alternatively (but less concise)
+filter(water_year_type, WaterYearType == "Critical" | WaterYearType == "Dry")
+```
+
+Write code to return rows from `water_year_type` where `WaterYearType` is not `Critical` or `Dry`.
+```{r filter-not-in, exercise=TRUE}
+
+```
+
+```{r filter-not-in-hint}
+filter(water_year_type, !(WaterYearType %in% c("Critical", "Dry")))
+# note that NAs are retained
+```
+
+Write code to return rows from `water_year_type` where `WaterYear` is 2001-2010.
+```{r filter-years, exercise=TRUE}
+
+```
+
+```{r filter-years-hint}
+filter(water_year_type, WaterYear %in% 2001:2010)
+filter(water_year_type, WaterYear >= 2001 & WaterYear <= 2010)
+filter(water_year_type, WaterYear > 2000 & WaterYear < 2011)
+```
+
+### Arrange
+
+Change code to arrange rows from `water_year_type` by descending `WaterYear`.
+```{r arrange-desc, exercise=TRUE}
+arrange(water_year_type, WaterYear)
+```
+
+```{r arrange-desc-hint}
+arrange(water_year_type, desc(WaterYear))
+```
+
+Write code to arrange rows from `water_year_type` by `WaterYearYearType`, descending `Valley`, and `WaterYear`. Note, sort order for factors is special. We will come back to this later in the tutorial. 
+```{r arrange-multi, exercise=TRUE}
+
+```
+
+```{r arrange-multi-hint}
+arrange(water_year_type, WaterYearType, desc(Valley), WaterYear)
+```
+
+### Select
+
+Change code to select columns from `water_year_type` such that the `Valley` column is on the left.
+```{r select-order, exercise=TRUE}
+select(water_year_type, WaterYear, Valley, WaterYearType)
+```
+
+```{r select-order-hint}
+select(water_year_type, Valley, WaterYear, WaterYearType)
+```
+
+Write code to drop `WYT` column from `water_year_type`.
+```{r select-drop, exercise=TRUE}
+
+```
+
+```{r select-drop-hint}
+select(water_year_type, -WYT)
+```
+
+Write code to drop `WYT` column from `water_year_type` and rename `WaterYearType` to `WYT`.
+```{r select-drop-rename, exercise=TRUE}
+
+```
+
+```{r select-drop-rename-hint}
+rename(select(water_year_type, -WYT), WYT = WaterYearType)
+select(water_year_type, WaterYear, Valley, WYT = WaterYearType)
+```
+
+### Rename
+
+Write code to rename `WYT` to `WYTCode` and `WaterYearType` to `WYT`.
+```{r rename, exercise=TRUE}
+
+```
+
+```{r rename-hint}
+rename(water_year_type, WYTCode = WYT, WYT = WaterYearType)
+```
+
+### Mutate
+
+Before we get into mutate, let's revisit what I mentioned earlier about sorting of factors. Characters are sorted alphabetically. Factors are sorted according to a specified order, which defaults to alphabetical. In the case of `water_year_type`, the order of the `WYT` (and `WaterYearType`) levels was previously specified to sort from driest to wettest. In contrast, `Valley` is a character vector that sorts in alphabetical order.
+
+```{r, echo=TRUE}
+sort(unique(water_year_type$WYT))
+sort(unique(water_year_type$Valley))
+```
+
+Use the function `as.character` to create a new column `WYT_char` that converts `WYT` to a character vector.
+```{r mutate, exercise=TRUE}
+
+```
+
+```{r mutate-hint}
+mutate(water_year_type, WYT_char = as.character(WYT))
+```
+
+Change the 2nd line of code to create a new factor column, `WYT_fac`, with levels arranged from wettest to driest. 
+```{r mutate-fac, exercise=TRUE}
+water_year_type2 <- mutate(water_year_type, WYT_char = as.character(WYT))
+mutate(water_year_type2, WYT_fac = factor(WYT_char, levels = c("AN", "BN", "C", "D", "W")))
+```
+
+```{r mutate-fac-hint}
+water_year_type2 <- mutate(water_year_type, WYT_char = as.character(WYT))
+mutate(water_year_type2, WYT_fac = factor(WYT_char, levels = c("W", "AN", "BN", "D", "C")))
+```
+
+### Arrange Revisited
+
+Change code to see difference between arranging rows based on `WYT`, `WYT_char`, and `WYT_fac`.
+```{r arrange-revisited, exercise=TRUE, exercise.eval=TRUE}
+water_year_type %>% 
+  mutate(WYT_char = as.character(WYT),
+         WYT_fac = factor(WYT_char, levels = c("W", "AN", "BN", "D", "C"))) %>% 
+  arrange(WYT)
+```
+
+### Group by and summarise
+
+Change code to achieve same result but use `length` instead of `n`.
+```{r group-n, exercise=TRUE}
+water_year_type %>% 
+  group_by(WaterYearType) %>% 
+  summarise(Count = n())
+```
+
+```{r group-n-hint}
+water_year_type %>% 
+  group_by(WaterYearType) %>% 
+  summarise(Count = length(WaterYear))
+```
+
+Change code to achieve same result with `count`.
+```{r count, exercise=TRUE}
+water_year_type %>% 
+  group_by(WaterYearType) %>% 
+  summarise(Count = n())
+```
+
+```{r count-hint}
+water_year_type %>% 
+  count(WaterYearType)
+```
+
+Write code to `count` by `Valley` and `WaterYearType`.
+```{r count2, exercise=TRUE}
+
+```
+
+```{r count2-hint}
+water_year_type %>% 
+  count(Valley, WaterYearType)
+```
+
+Write code to remove `NA` in `WaterYearType` before using `count` by `Valley` and `WaterYearType`.
+```{r count3, exercise=TRUE}
+
+```
+
+```{r count3-hint}
+water_year_type %>% 
+  filter(!is.na(WaterYearType)) %>% 
+  count(Valley, WaterYearType)
+```
+
+Write code to remove `NA` in `WaterYearType`, `count` by `Valley` and `WaterYearType`, and then calculate the proportion of years in each water year type.
+```{r count4, exercise=TRUE}
+
+```
+
+```{r count4-hint}
+water_year_type %>% 
+  filter(!is.na(WaterYearType)) %>% 
+  count(Valley, WaterYearType) %>% 
+  group_by(Valley) %>% 
+  mutate(PropYears = n/sum(n))
+```
