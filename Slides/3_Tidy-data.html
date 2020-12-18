@@ -277,7 +277,7 @@ left_join(det, rec)
 ```r
 left_join(det, rec) %&gt;% 
   ggplot(aes(x = Day, y = RKM, col = FishID)) +
-  geom_point(size = 4) +
+  geom_point(size = 3) +
   geom_line(size = 1)
 ```
 
@@ -285,7 +285,7 @@ left_join(det, rec) %&gt;%
 ## Joining, by = "Receiver"
 ```
 
-&lt;img src="3_Tidy-data_files/figure-html/unnamed-chunk-10-1.png" height="320px" /&gt;
+&lt;img src="3_Tidy-data_files/figure-html/waterfall-1.png" height="320px" /&gt;
 
 ---
 
@@ -332,6 +332,31 @@ tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
 ## 2 Chinook_Fry          980
 ## 3 Steelhead_Spawning    17
 ## 4 Steelhead_Fry       1234
+```
+
+
+---
+
+## Unite
+
+
+```r
+tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
+                             "Steelhead_Spawning", "Steelhead_Fry"),
+       Count = c(12, 980, 17, 1234)) %&gt;% 
+  separate(col = "Species_Lifestage", 
+           into = c("Species", "Lifestage")) %&gt;% 
+  unite(Species_Lifestage, Species, Lifestage, sep = ".")
+```
+
+```
+## # A tibble: 4 x 2
+##   Species_Lifestage  Count
+##   &lt;chr&gt;              &lt;dbl&gt;
+## 1 Chinook.Spawning      12
+## 2 Chinook.Fry          980
+## 3 Steelhead.Spawning    17
+## 4 Steelhead.Fry       1234
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

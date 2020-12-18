@@ -147,10 +147,10 @@ left_join(det, rec)
 
 ## Left Join
 
-```{r echo = TRUE, out.height = '320px'}
+```{r waterfall, echo = TRUE, out.height = '320px'}
 left_join(det, rec) %>% 
   ggplot(aes(x = Day, y = RKM, col = FishID)) +
-  geom_point(size = 4) +
+  geom_point(size = 3) +
   geom_line(size = 1)
 ```
 
@@ -158,7 +158,7 @@ left_join(det, rec) %>%
 
 ## Separate
 
-```{r echo = TRUE, out.height = '320px'}
+```{r echo = TRUE}
 tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
                              "Steelhead_Spawning", "Steelhead_Fry"),
        Count = c(12, 980, 17, 1234)) %>% 
@@ -170,7 +170,7 @@ tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
 
 ## Unite
 
-```{r echo = TRUE, out.height = '320px'}
+```{r echo = TRUE}
 tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
                              "Steelhead_Spawning", "Steelhead_Fry"),
        Count = c(12, 980, 17, 1234)) %>% 
@@ -179,4 +179,17 @@ tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
   unite(Species_Lifestage, Species, Lifestage)
 ```
 
+
+---
+
+## Unite
+
+```{r echo = TRUE}
+tibble(Species_Lifestage = c("Chinook_Spawning", "Chinook_Fry",
+                             "Steelhead_Spawning", "Steelhead_Fry"),
+       Count = c(12, 980, 17, 1234)) %>% 
+  separate(col = "Species_Lifestage", 
+           into = c("Species", "Lifestage")) %>% 
+  unite(Species_Lifestage, Species, Lifestage, sep = ".")
+```
 
