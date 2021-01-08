@@ -39,7 +39,7 @@ range(iris$Petal.Length)
 sepL_vs_petL + geom_point()
 
 #### AESTHETICS 
-# aesthetics control the size, shape, and color of our geometries
+# aesthetics control the size### shape, and color of our geometries
 
 # setting aesthetics for all points
 sepL_vs_petL+
@@ -70,8 +70,8 @@ sepL_vs_petL+
 
 # setting aesthetics for continuous variables
 sepL_vs_petL+
-  geom_point(mapping = aes(color = Petal.Length, # different color for each species
-                           fill = Petal.Length), # different fill for each species
+  geom_point(mapping = aes(color = Petal.Length, # different outline by length
+                           fill = Petal.Length), # different fill by length
              shape = 21, size = 3)
 
 #### GEOMETRIES
