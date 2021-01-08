@@ -8,7 +8,7 @@
 # basics of ggplot
 
 library(ggplot2)
-library(dplyr)
+library(tidyverse)
 
 # first load in the data from a basic R dataset "iris" which 
 # compares flower parts of different species of iris
