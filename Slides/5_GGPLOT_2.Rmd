@@ -1,0 +1,703 @@
+---
+title: "ggplot Continued"
+author: 
+  - "Taylor Spaulding"
+date: "2021-01-22"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#699CC6",
+  secondary_color = "#F9A134",
+  inverse_header_color = "#FFFFFF",
+  extra_css = list(".title-slide" = list("background-color" = "#FFFFFF"),
+                   ".title-slide, .title-slide h1, .title-slide h2, .title-slide h3" = 
+                     list("color" = "#699CC6")))
+```
+
+## ggplot Continued
+
+Topics for Today
+  - Grouping
+  - Statistics
+  - Theming
+
+---
+
+## Load Up Your Packages
+
+```{r echo = TRUE}
+library(tidyverse)
+```
+
+---
+
+## Load In Some Data
+
+Load in the data from a dataset stored in the Project. 
+
+```{r echo = TRUE}
+poke <- read.csv(file.path("~","R","R-Intro-Training","Data", "Pokemon.csv"))
+
+```
+
+---
+## Basic Mutations
+
+Make all the factorized fields into characters
+
+Filter the dataset for only Grass, Water, and Fire Types
+
+```{r echo = TRUE}
+poke <- poke %>%
+  mutate_if(., is.factor, as.character)
+
+poke_mod <- poke %>%
+  filter(., stringr::str_detect("(Grass|Water|Fire)", Type.1)) #filter for just those with these types
+
+```
+
+---
+
+## Examine the Data
+
+```{r echo = TRUE}
+str(poke_mod)
+```
+
+---
+
+## Creating A Simple Plot
+
+```{r echo = TRUE, out.height = '400px', out.width= '500px'}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point()
+```
+
+---
+
+## Faceting
+
+Sometimes plots are difficult to read when too many groups are present, faceting can be used to reduce clutter.
+
+`facet_grid([rows] ~ [columns])` is added to our original plot.
+
+A period is used to "ignore" the rows here
+```[r]
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  facet_grid(. ~ Type.1)
+```
+
+---
+
+## Faceting
+
+```{r echo == TRUE, out.height = '400px', out.width= '500px'}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  facet_grid(. ~ Type.1)
+```
+
+---
+
+## Faceting
+By changing which side of the "~" we place the variable on we change the orientation.
+```{r echo = TRUE, out.height = '300px', out.width= '400px'}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  facet_grid(Type.1 ~ .)
+```
+
+---
+
+## Making things Tricky
+
+Lets change the data to make Water Type 6x more abundant
+  
+```{r echo = TRUE}
+poke_mod %>%
+  base::split(., .$Type.1) %>% # Split the dataset by type
+  purrr::map(~ dplyr::filter(., Type.1 == "Water")) %>% # Filter the dataset for only water pokemon
+  base::Filter(function(x) dim(x)[1] > 1, .) %>%
+  base::rep(., 5) %>% # Repeat the entire data set 5 times for 6 records
+  base::do.call(rbind, .) %>% #bind all the rows together into a single table
+  base::rbind(., poke_mod) -> six_times_water # Bind the new table to the old
+
+```
+---
+
+## Histograms
+.pull-left[  
+```{r echo = TRUE, out.height = '300px', out.width= '400px'}
+ggplot(data = six_times_water, mapping = aes(x = Attack, fill = Type.1)) +
+  geom_histogram() +
+  facet_grid(Type.1 ~ .)
+```
+]
+
+.pull-right[ 
+It's hard to read Fire and Grass, because the y-axis scale is determined by Water
+]
+
+---
+
+## Facet Axis Scales
+
+We can adjust scales for the x or y axes
+
+`scales = "free_y"`
+
+.pull-left[
+```[r]
+ggplot(data = six_times_water, 
+       mapping = aes(x = Attack, 
+       fill = Type.1)) +
+  geom_histogram() +
+  facet_grid(Type.1 ~ . , 
+             scales = "free_y")
+```
+]
+
+.pull-right[
+```{r echo = FALSE, out.height = '300px', out.width= '400px'}
+ggplot(data = six_times_water, mapping = aes(x = Attack, fill = Type.1)) +
+  geom_histogram() +
+  facet_grid(Type.1 ~ . , scales = "free_y")
+```
+]
+
+---
+## Facetting
+
+can include facets for both rows and columns
+
+.pull-left[
+Type ~ Legendary
+```{r echo = FALSE, out.height = '300px', out.width= '400px', message=FALSE}
+ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1)) +
+  geom_histogram() +
+  facet_grid(Type.1 ~ Legendary,)
+```
+]
+
+.pull-right[
+Legendary ~ Type
+```{r echo = FALSE, out.height = '300px', out.width= '400px', message=FALSE}
+ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1)) +
+  geom_histogram() +
+  facet_grid(Legendary ~ Type.1,)
+```
+]
+---
+
+## New Statistics/Summaries
+
+Smoothers turn data (points) into smoothed curves
+```
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, col = Type.1)) +
+  geom_point() +
+  geom_smooth(se = FALSE, span = 0.7)
+```
+se = FALSE turns off the standard error ribbon
+
+span = 0.7 determines the "wiggliness" of the curve try other combos, higher = less squiggle
+
+---
+
+## Statistics/Summaries
+
+Smoothers turn data (points) into smoothed curves
+```{r, out.height = '300px', out.width= '400px'}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, col = Type.1)) +
+  geom_point() +
+  geom_smooth(se = FALSE, span = 0.7)
+```
+---
+
+## Statistics and Summaries
+
+`geom_histogram` is another stat we've already used
+
+
+```{r echo = TRUE, out.height= 300, out.width= 400}
+ggplot(data = poke_mod, mapping = aes(x = Attack)) +
+  geom_histogram()
+```
+
+---
+
+## Statistics and Summaries
+
+We can also make a histogram using `geom_bar` and `stat = "bin"`
+geom_histogram is called a "wrapper"
+
+```{r, echo = TRUE, out.height=300, out,width = 400}
+ggplot(data = poke_mod, mapping = aes(x = Attack)) +
+  geom_bar(stat = "bin")
+```
+
+---
+
+## Statistics
+
+Sometimes we want to plot "standard" distributions the `stat_function` geometry is used for this.
+
+Create new x-values for distribution
+```{r, echo = TRUE, out.height= 400, out.width=400}
+x <- data.frame(x = seq(-4, 4, length = 1000))
+```
+
+---
+## Statistics
+
+Sometimes we want to plot "standard" distributions the `stat_function` geometry is used for this.
+
+Plot the normal distribution with ggplot
+```{r, echo = TRUE, out.height= 300, out.width=400}
+ggplot(data = x, mapping = aes(x = x)) +
+  stat_function(fun = dnorm)
+```
+
+---
+## Statistics
+
+Sometimes we want to plot "standard" distributions the `stat_function` geometry is used for this.
+
+Plot the t-distribution with ggplot
+```{r, echo = TRUE, out.height= 300, out.width=400}
+ggplot(data = x, mapping = aes(x = x)) +
+  stat_function(fun = dt, args = list(df = 20))
+```
+
+---
+## Statistics
+
+Using these statistical functions to extract y-values for x-values in the t-distribution, with 20 degrees of freedom
+```{r, echo = TRUE, out.height= 400, out.width=400}
+data <- data.frame(x = x, y = dt(x$x, df = 20))
+```
+
+---
+
+## Statistics
+
+Get two-tailed critical value for t-distribution with 20 df and alpha = 0.05
+```{r, echo = TRUE, out.height= 400, out.width=400}
+critical_value <- qt(0.025, 20)
+```
+
+---
+## Statistics
+
+Make a beautiful graph of the t-distribution
+```
+ggplot(data = x, mapping = aes(x = x)) +
+  stat_function(fun = dt, args = list(df = 20))+
+  geom_area(data = subset(data, x <= critical_value), 
+            mapping = aes(x = x, y = y), fill = "red") +
+  geom_area(data = subset(data, x >= abs(critical_value)), 
+            mapping = aes(x = x, y = y), fill = "red") +
+  geom_vline(xintercept = c(critical_value, abs(critical_value))) +
+  annotate("text", x = -3.5, y = 0.375, 
+           label = "alpha = 0.05") +
+  annotate("text", x = -3.25, y = 0.05, 
+           label = paste("critical value = ", round(critical_value, digits = 3)), col = "red") +
+  annotate("text", x = 3.25, y = 0.05, 
+           label = paste("critical value = ", round(abs(critical_value), digits = 3)), col = "red")
+
+```
+notice use of `stat_function`, `geom_area`, `geom_vline`, and `annotate`
+---
+## Statistics
+Make a beautiful graph of the t-distribution
+
+```{r, echo = FALSE, out.height= 400, out.width=500}
+ggplot(data = x, mapping = aes(x = x)) +
+  stat_function(fun = dt, args = list(df = 20))+
+  geom_area(data = subset(data, x <= critical_value), 
+            mapping = aes(x = x, y = y), fill = "red") +
+  geom_area(data = subset(data, x >= abs(critical_value)), 
+            mapping = aes(x = x, y = y), fill = "red") +
+  geom_vline(xintercept = c(critical_value, abs(critical_value))) +
+  annotate("text", x = -3.5, y = 0.375, 
+           label = "alpha = 0.05") +
+  annotate("text", x = -3.25, y = 0.05, 
+           label = paste("critical value = ", round(critical_value, digits = 3)), col = "red") +
+  annotate("text", x = 3.25, y = 0.05, 
+           label = paste("critical value = ", round(abs(critical_value), digits = 3)), col = "red")
+
+```
+
+notice use of `stat_function`, `geom_area`, `geom_vline`, and `annotate`
+---
+
+## Statistics
+
+Summarizing y-values at an x-value
+.pull_left[
+```[r]
+ggplot(data = poke_mod, mapping = aes(x = Type.1, y = Speed)) +
+  geom_jitter(width = 0.1) +
+  stat_summary(geom = "point", fun.y = "median", size = 5, aes(colour = Type.1))
+```
+]
+.pull_right[
+`geom_jitter` creates point geometries which are separated randomly
+
+the `stat_summary` call finds the median y-values and plots a point
+
+]
+---
+## Statistics
+
+Summarizing y-values at an x-value
+.pull_left[
+```{r echo = FALSE, out.height= 300, out.width=400}
+ggplot(data = poke_mod, mapping = aes(x = Type.1, y = Speed)) +
+  geom_jitter(width = 0.1) +
+  stat_summary(geom = "point", fun.y = "median", size = 5, aes(colour = Type.1))
+```
+]
+.pull_right[
+`geom_jitter` creates point geometries which are separated randomly
+
+the `stat_summary` call finds the median y-values
+
+]
+---
+
+## Coordinates and Scales
+
+We've already seen how we can assign x and y coordinates, but we can also use the coordinate system to display our plots better
+
+Lets reorder the count data by type for all pokemon types
+```{r, out.height= 400, out.width=500}
+highest_to_lowest <- poke %>%
+  dplyr::group_by(., Type.1) %>%
+  dplyr::summarise(n = n()) %>%
+  dplyr::arrange(., n) %>%
+  dplyr::pull(., Type.1) %>%
+  base::unique(.)
+poke$Type.1 <- factor(poke$Type.1, levels = highest_to_lowest)
+```
+---
+
+## Coordinates and Scales
+
+Standard Plot:
+```{r echo = FALSE, out.height= 400, out.width=500}
+ggplot(data = poke, mapping = aes(x = Type.1)) +
+  geom_bar()
+```
+
+x-axis is cluttered!
+---
+## Coordinates and Scales
+
+Can we switch x for y?
+```{r echo = TRUE, out.height= 300, out.width=400}
+ggplot(data = poke, mapping = aes(y = Type.1)) +
+  geom_bar()
+```
+
+Sure! But let's try another methods!
+---
+
+## Coordinates and Scales
+
+Coordinate Flip
+```{r echo = TRUE, out.height= 300, out.width=400}
+ggplot(data = poke, mapping = aes(x = Type.1)) +
+  geom_bar()+
+  coord_flip()
+```
+---
+
+## Axis Scaling
+Adjusting the axes to represent different scales/information is done through a simple call:
+
+`scale_x_[function]()` or `scale_y_[function]()`
+
+Built in scale functions are: `continuous`, `discrete`, `log10`, `sqrt`, and `reverse`
+
+As we saw last session, `discrete` scale only works for categorical variables (text, factor, integer)
+
+All other scales only work for continuous numeric variables
+
+---
+
+## Axis Scaling
+
+Get some new data
+
+```[r]
+mtcars <- mtcars
+```
+---
+
+## Axis Scaling
+
+Basic Plot; The additional `scale_x_continuous` call is where we will adjust the x-axis
+
+```{r, echo = TRUE, out.height = 200, out.width = 300}
+ggplot(data = mtcars)+ 
+  geom_point(aes(x = mpg, y = qsec))+
+  scale_x_continuous()+ #This is where we can scale the x-axis
+  labs(title = "Miles per Gallon vs. Cylinder Count",
+       subtitle = "V-Shaped vs. Flat",
+       x = "Quarter Mile Time (seconds)",
+       y = "Miles per Gallon (mpg)")
+```
+---
+## Axis Scaling
+
+Change the tick marks (`breaks`)
+
+```{r, echo = TRUE, out.height = 200, out.width = 300}
+ggplot(data = mtcars)+ 
+  geom_point(aes(x = mpg, y = qsec))+
+  scale_x_continuous(breaks = c(10,20,30))+ #change the "breaks" (labels)
+  labs(title = "Miles per Gallon vs. Cylinder Count",
+       subtitle = "V-Shaped vs. Flat",
+       x = "Quarter Mile Time (seconds)",
+       y = "Miles per Gallon (mpg)")
+```
+---
+## Axis Scaling
+
+Reverse order the tick marks (`breaks`)
+
+```{r, echo = TRUE, out.height = 200, out.width = 300}
+ggplot(data = mtcars)+ 
+  geom_point(aes(x = mpg, y = qsec))+
+  scale_x_reverse()+ 
+  labs(title = "Miles per Gallon vs. Cylinder Count",
+       subtitle = "V-Shaped vs. Flat",
+       x = "Quarter Mile Time (seconds)",
+       y = "Miles per Gallon (mpg)")
+```
+---
+## Zoom
+Useful for insets
+```{r, echo = TRUE, out.height = 300, out.width = 400}
+ggplot(data = mtcars, aes(x = mpg))+
+  geom_histogram()
+```
+
+Lets focus on cars getting >25mpg
+---
+## Zoom
+using `scale_x_continuous` and the `limits` call we can zoom to a particular section
+```{r, echo = TRUE, out.height = 300, out.width = 400, message = FALSE}
+ggplot(data = mtcars, aes(x = mpg))+
+  geom_histogram()+
+  scale_x_continuous(limits = c(25, 35), breaks = seq(25,35,2))
+```
+---
+
+## Scaling Non-Normal Data
+
+Not all data is well-suited for "normal" distribution plots! Let's load some new data!
+
+```{r}
+library(gapminder)
+```
+
+---
+##Scaling Non-Normal Data
+
+Basic Smooth based on a log-normal distribution
+```{r, echo = TRUE, out.height = 300, out.width = 400}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ log(x))
+```
+
+This isn't very attractive! Because our axes are not scaled appropriately!
+---
+
+## Scaling Non-Normal Data
+
+Simply adding `scale_log10_x` creates a linear graph showing the trend better
+```{r, echo = TRUE, out.height = 300, out.width = 400}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  scale_x_log10()
+```
+---
+## Themes
+
+Themes allow us to change the appearance of ggplots
+
+ggplot contains a number of native themes some better than others
+
+---
+## Themes
+Theme Minimal:
+```{r, echo = TRUE, out.height = 300, out.width = 400}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type") +
+  theme_minimal()
+```
+
+---
+## Themes
+The `theme` call can help us take even more control over the theme like the placement of the title
+```{r, echo = TRUE, out.height = 300, out.width = 400}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5) # hjust 0 = left, 0.5 = center, 1 = right
+  )
+```
+---
+
+## Themes
+
+How much can we change? Everything!!
+```[r]
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # adjust the centering and size of title
+        legend.position = "bottom", # positions the legend on the bottom
+        legend.title = element_text(size = 15), # change the legend title font size
+        legend.text = element_text(size = 12), # change the legend label font size
+        axis.title.x = element_text(size = 15), # change the axis title font size
+        axis.text.x = element_text(size = 15), # change the axis label font size
+        axis.title.y = element_text(size = 15), # change the axis title font size
+        axis.text.y = element_text(size = 15)) + # change the axis label font size
+  scale_color_discrete(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                       labels = c("Fire Pokemon",
+                                  "Grass Pokemon",
+                                  "Water Pokemon"))
+```
+---
+## Themes
+
+How much can we change? Everything!!
+```{r, echo = FALSE}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # adjust the centering and size of title
+        legend.position = "bottom", # positions the legend on the bottom
+        legend.title = element_text(size = 15), # change the legend title font size
+        legend.text = element_text(size = 12), # change the legend label font size
+        axis.title.x = element_text(size = 15), # change the axis title font size
+        axis.text.x = element_text(size = 15), # change the axis label font size
+        axis.title.y = element_text(size = 15), # change the axis title font size
+        axis.text.y = element_text(size = 15)) + # change the axis label font size
+  scale_color_discrete(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                       labels = c("Fire Pokemon",
+                                  "Grass Pokemon",
+                                  "Water Pokemon"))
+```
+---
+## Themes
+
+This is pretty intense, can you make it easier? 
+
+Use the ESA Template!! Simply copy and paste from lines 260 to 287 to the top of your script
+
+```{r}
+library(ggthemr)
+
+esa_colours <- c('#F9A134', '#699CC6', '#A0CF67', '#9370B1', '#F26531', '#72CCD2', '#098A5B', '#781D7E','#B12533', '#004261', '#015E44', '#421953', '#DCDDDE', '#ADAFB2', '#6D6E71')
+
+esa_colours <- c('#000000', esa_colours) #Add black as the "initial" color (outlining boxes, and plain plots)
+
+esa_theme <- define_palette(
+  swatch = esa_colours, # colors for plotting points
+  gradient = c(lower = esa_colours[7L], upper = esa_colours[11L]), # upper and lower colors for continuous colors
+  background = '#FFFFFF' # White background
+)
+```
+
+---
+## Themes
+
+Apply this as a "theme" using `ggthemr`
+
+```{r}
+ggthemr(esa_theme, type = "outer", layout = "minimal", spacing = 3)
+```
+---
+## Themes
+
+Build this as a complete theme which can be called in ggplot
+
+```{r}
+theme_esa <- function(base_size = 11, base_family = "", base_line_size = base_size/22, base_rect_size = base_size/22){
+  theme_bw(base_size = base_size, base_family = base_family,
+           base_line_size = base_line_size, base_rect_size = base_rect_size) %+replace%
+    theme(panel.border =element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(color = '#000000', size = rel(1)),
+          legend.key = element_blank(),
+          plot.title = element_text(size = 18, face = 'bold'),
+          plot.subtitle = element_text(size = 12, face = 'italic', color = 'grey40'),
+          plot.caption = element_text(hjust = 0, size = 9, color = 'grey30'),
+          strip.background = element_rect(fill = '#FFFFFF', color = "#000000", size = rel(2)), complete = TRUE)
+}
+```
+---
+
+## Theme
+
+Test our new theme!
+
+```
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_esa() + # THEME IS HERE
+   scale_color_manual(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                      labels = c("Fire Pokemon",
+                                 "Grass Pokemon",
+                                 "Water Pokemon"),
+                      values = c(esa_colours[2], esa_colours[4], esa_colours[3])) # scale the colors manually to ensure they match (can we do this another way?)
+```
+---
+Test our new theme!
+
+```{r, echo = FALSE, out.height = 500, out.width = 600}
+ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+  geom_point() +
+  labs(title = "Defending/Attacking Scatter Plot By Pokemon Type",
+       x = "Base Attacking Skills",
+       y = "Base Defending Skills") +
+  theme_esa() + # THEME IS HERE
+   scale_color_manual(name = "Pokemon Type", # make some fancy names in the legend using aesthetic scale
+                      labels = c("Fire Pokemon",
+                                 "Grass Pokemon",
+                                 "Water Pokemon"),
+                      values = c(esa_colours[2], esa_colours[4], esa_colours[3])) # scale the colors manually to ensure they match (can we do this another way?)
+```
+---

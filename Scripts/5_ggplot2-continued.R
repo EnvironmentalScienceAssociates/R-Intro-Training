@@ -7,7 +7,6 @@
 # The following script is designed to introduce users to more 
 # advanced aspects of ggplot
 
-library(ggplot2)
 library(tidyverse)
 
 # first load in the Pokemon dataset. 
@@ -256,7 +255,7 @@ ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) 
                                   "Water Pokemon"))
 
 # This is pretty intense, can you make it easier? 
-# Use the ESA Template!! Simply copy and paste from lines 261 to 287 at the top of your script
+# Use the ESA Template!! Simply copy and paste from lines 260 to 287 at the top of your script
 
 library(ggthemr)
 
