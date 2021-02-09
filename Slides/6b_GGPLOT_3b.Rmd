@@ -1,0 +1,219 @@
+---
+title: "ggplot Continued"
+author: 
+  - "Taylor Spaulding"
+date: "2021-01-22"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#699CC6",
+  secondary_color = "#F9A134",
+  inverse_header_color = "#FFFFFF",
+  extra_css = list(".title-slide" = list("background-color" = "#FFFFFF"),
+                   ".title-slide, .title-slide h1, .title-slide h2, .title-slide h3" = 
+                     list("color" = "#699CC6")))
+```
+
+## ggplot Continued   
+
+Topics for Today
+  - Intro to gridExtra
+
+---
+
+## Load Up Your Packages
+
+```{r echo = TRUE}
+library(tidyverse)
+library(gridExtra)
+```
+---
+
+## Load In Some Data
+
+Load in the data from a dataset stored in the Project. 
+
+```{r echo = TRUE}
+poke <- read_csv("C:/Users/tspaulding/Documents/R/R-Intro-Training/Data/Pokemon.csv")
+
+poke_mod <- poke %>%
+  filter(`Type 1` %in% c("Grass","Water","Fire")) #filter for just those with these types
+
+poke_mod <- poke_mod %>%
+  mutate(`Type 1` = factor(`Type 1`, levels = c("Fire","Water","Grass")))
+
+str(poke_mod)
+
+```
+
+---
+## Basic Plots
+
+Build a few Basic plots which we can maneuver
+
+``` {r echo = TRUE}
+atk_def <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense)) +
+  geom_point(aes(color = `Type 1`)) + theme(legend.position="bottom")
+
+atk_hp <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = HP)) +
+  geom_point(aes(color = `Type 1`)) + theme(legend.position="bottom")
+
+spd_hp <- ggplot(data = poke_mod, mapping = aes(x = Speed, y = HP)) +
+  geom_point(aes(color = `Type 1`)) + theme(legend.position="bottom")
+
+spatk_spdef <- ggplot(data = poke_mod, mapping = aes(x = `Sp. Atk`, y = `Sp. Def`))+ 
+  geom_point(aes(color = `Type 1`)) + theme(legend.position="bottom")
+```
+
+---
+## gridArrange
+
+Let's arrange the four plots into a 2x2 grid
+
+```{r}
+grid.arrange(atk_def, atk_hp, spd_hp, spatk_spdef, ncol = 2, nrow = 2)
+```
+
+---
+## Legend Management
+
+Four legends are crowding the plot if we have a common legend, we can extract the legend with a custom fuction (This will work for any plot)
+```{r echo = TRUE}
+g_legend<-function(plot){
+  tmp <- ggplot_gtable(ggplot_build(plot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+```
+
+---
+## Legend Management
+
+Use the function on a single plot to extract the legend
+
+```{r echo = TRUE}
+mylegend<-g_legend(atk_def)
+```
+
+---
+## Legend Management
+
+We can use a rather complicated arrangement to place the legend underneath the 2x2 matrix
+
+
+```
+grid.arrange(arrangeGrob(atk_def + theme(legend.position = "none"),
+             atk_hp + theme(legend.position = "none"),              
+             spd_hp + theme(legend.position = "none"),              
+             spatk_spdef + theme(legend.position = "none"),         
+             ncol = 2, nrow = 2),                                   
+             mylegend, nrow = 2, heights = c(30, 2))
+    
+```
+
+The nested `arrangeGrob()` allows for us to create the 2x2 matrix as a single grob (graphic object).
+
+In the main `grid.arrange()`, the first grob is the matrix and the second is the legend we created 
+
+
+---
+## Legend Management
+
+``` {r echo = FALSE}
+grid.arrange(arrangeGrob(atk_def + theme(legend.position = "none"),
+             atk_hp + theme(legend.position = "none"),              
+             spd_hp + theme(legend.position = "none"),              
+             spatk_spdef + theme(legend.position = "none"),         
+             ncol = 2, nrow = 2),                                   
+             mylegend, nrow = 2, heights = c(30, 2))
+```
+---
+## gridExtra and Beyond
+
+Can make very complicated plots by using custom layouts
+
+```{r}
+layout = rbind(c(1,1,1,1,1,NA),
+               c(2,2,2,2,2,3),
+               c(2,2,2,2,2,3),
+               c(2,2,2,2,2,3),
+               c(2,2,2,2,2,3),
+               c(2,2,2,2,2,3))
+```
+---
+## gridExtra and Beyond
+
+make a histogram of attack scores...
+
+```{r}
+atk_histo <- ggplot(data = poke_mod, mapping = aes(x = Attack, fill = `Type 1`))+
+  geom_histogram()+
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank()
+  )
+```
+---
+## gridExtra and Beyond
+
+...and of defence scores (notice the coord_flip to make it vertical)
+
+```{r}
+def_histo <- ggplot(data = poke_mod, mapping = aes(x = Defense, fill = `Type 1`))+
+  geom_histogram()+
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank()
+  )+
+  coord_flip()
+```
+extract the legend
+```{r}
+mylegend<-g_legend(atk_histo)
+```
+---
+## gridExtra and Beyond
+
+Plot it
+
+```{r eval = FALSE}
+grid.arrange(arrangeGrob(atk_histo + theme(legend.position = "none"), 
+                         atk_def + theme(legend.position = "none") + labs(x = "Attack"), 
+                         def_histo, 
+                         layout_matrix = layout),
+             mylegend, 
+             nrow = 2, heights = c(30,2))
+```
+---
+## gridExtra and Beyond
+
+Plot it
+
+```{r echo = FALSE, message = FALSE}
+grid.arrange(arrangeGrob(atk_histo + theme(legend.position = "none"), 
+                         atk_def + theme(legend.position = "none") + labs(x = "Attack"), 
+                         def_histo, 
+                         layout_matrix = layout),
+             mylegend, 
+             nrow = 2, heights = c(30,2))
+```
+

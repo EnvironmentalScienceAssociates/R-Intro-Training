@@ -13,33 +13,30 @@ library(gridExtra)
 
 # Simple tasks with gridExtra
 
-# Arranging multipled plots on a single page
+# Arranging multiple plots on a single page
 # first load in the Pokemon dataset. 
-poke <- read.csv(file.path("Data", "Pokemon.csv"))
-
-poke <- poke %>%
-  mutate_if(., is.factor, as.character)
+poke <- read_csv(file.path("Data", "Pokemon.csv"))
 
 poke_mod <- poke %>%
-  filter(., stringr::str_detect("(Grass|Water|Fire)", Type.1)) #filter for just those with these types
+  filter(., stringr::str_detect("(Grass|Water|Fire)", `Type 1`)) #filter for just those with these types
 
 poke_mod <- poke_mod %>%
-  mutate(Type.1 = factor(Type.1, levels = c("Fire","Water","Grass")))
+  mutate(`Type 1` = factor(Type.1, levels = c("Fire","Water","Grass")))
 
 str(poke_mod)
 
 # build a few basic plots
 
-atk_def <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+atk_def <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = `Type 1`)) +
   geom_point() + theme(legend.position="bottom")
 
-atk_hp <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = HP, color = Type.1)) +
+atk_hp <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = HP, color = `Type 1`)) +
   geom_point() + theme(legend.position="bottom")
 
-spd_hp <- ggplot(data = poke_mod, mapping = aes(x = Speed, y = HP, color = Type.1)) +
+spd_hp <- ggplot(data = poke_mod, mapping = aes(x = Speed, y = HP, color = `Type 1`)) +
   geom_point() + theme(legend.position="bottom")
 
-spatk_spdef <- ggplot(data = poke_mod, mapping = aes(x = Sp..Atk, y = Sp..Def, color = Type.1)) +
+spatk_spdef <- ggplot(data = poke_mod, mapping = aes(x = `Sp. Atk`, y = `Sp. Def`, color = `Type 1`))+ 
   geom_point() + theme(legend.position="bottom")
 
 # arrange in a 2x2 grid
@@ -108,7 +105,7 @@ layout = rbind(c(1,1,1,1,1,NA),
                c(2,2,2,2,2,3),
                c(2,2,2,2,2,3))
 
-atk_histo <- ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1))+
+atk_histo <- ggplot(data = poke_mod, mapping = aes(x = Attack, fill = `Type 1`))+
   geom_histogram()+
   theme(
     legend.position = "bottom",
@@ -117,7 +114,7 @@ atk_histo <- ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1))+
     axis.title.x = element_blank()
   )
 
-def_histo <- ggplot(data = poke_mod, mapping = aes(x = Defense, fill = Type.1))+
+def_histo <- ggplot(data = poke_mod, mapping = aes(x = Defense, fill = `Type.1`))+
   geom_histogram()+
   theme(
     legend.position = "none",

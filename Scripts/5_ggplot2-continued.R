@@ -10,13 +10,13 @@
 library(tidyverse)
 
 # first load in the Pokemon dataset. 
-poke <- read.csv(file.path("Data", "Pokemon.csv"))
+poke <- read.csv("~/R/R-Intro-Training/Data/Pokemon.csv")
 
 poke <- poke %>%
   mutate_if(., is.factor, as.character)
 
 poke_mod <- poke %>%
-  filter(., stringr::str_detect("(Grass|Water|Fire)", Type.1)) #filter for just those with these types
+  filter(Type.1 %in% c("Grass","Water","Fire")) #filter for just those with these types
 
 str(poke_mod)
 
@@ -52,8 +52,8 @@ poke_mod %>%
 
 # Plot historgams as before
 ggplot(data = six_times_water, mapping = aes(x = Attack, fill = Type.1)) +
-  geom_histogram() +
-  facet_grid(Type.1 ~ .)
+  geom_histogram(binwidth = 5) +
+  facet_wrap(~Type.1, ncol = 1 , scales = "free_y")
 # Hard to read Fire and Grass, y-axis scale determined by Water-Type
 
 # Fix this by allowing the y-scales to be free
@@ -66,7 +66,7 @@ ggplot(data = six_times_water, mapping = aes(x = Attack, fill = Type.1)) +
 # separate data
 ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1)) +
   geom_histogram() +
-  facet_grid(Type.1 ~ Legendary,)
+  facet_grid(Type.2 ~ Type.1,)
 
 ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1)) +
   geom_histogram() +
@@ -79,7 +79,7 @@ ggplot(data = poke_mod, mapping = aes(x = Attack, fill = Type.1)) +
 # Smoothers turn point data into a smoothed curve
 ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, col = Type.1)) +
   geom_point() +
-  geom_smooth(se = FALSE, span = 0.7)
+  geom_smooth(se = TRUE, span = 0.2)
 # se = FALSE turns off the standard error ribbon
 # span = 0.7 determines the "wiggliness" of the curve try other combos, higher = less squiggle
 
@@ -153,9 +153,9 @@ ggplot(data = poke, mapping = aes(x = Type.1)) +
 ggplot(data = poke, mapping = aes(y = Type.1)) +
   geom_bar()
 #Nope! so what can we do?
-ggplot(data = poke, mapping = aes(x = Type.1)) +
+ggplot(data = poke, mapping = aes(x = Attack)) +
   geom_bar()+
-  coord_flip() # add in the coord_flip() call
+  coord_fixed(ratio = 2) # add in the coord_flip() call
 
 # Scaling Axes
 # Adjusting the axes to represent different scales/information is done through a simple call:
