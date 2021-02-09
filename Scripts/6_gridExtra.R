@@ -8,7 +8,6 @@
 # advanced aspects of gridEXTRA
 
 library(tidyverse)
-library(ggplot2)
 library(gridExtra)
 
 # Simple tasks with gridExtra
@@ -21,7 +20,7 @@ poke_mod <- poke %>%
   filter(., stringr::str_detect("(Grass|Water|Fire)", `Type 1`)) #filter for just those with these types
 
 poke_mod <- poke_mod %>%
-  mutate(`Type 1` = factor(Type.1, levels = c("Fire","Water","Grass")))
+  mutate(`Type 1` = factor(`Type 1`, levels = c("Fire","Water","Grass")))
 
 str(poke_mod)
 
@@ -61,27 +60,27 @@ grid.arrange(arrangeGrob(atk_def + theme(legend.position = "none"), # Nested arr
              spd_hp + theme(legend.position = "none"),              # grob
              spatk_spdef + theme(legend.position = "none"),         # Back in the main arrangement, the first grob is the matrix
              ncol = 2, nrow = 2),                                   # second grob is the legend
-             mylegend, nrow = 2, heights = c(30, 1))                 # Set the height of the rows (trial and error)
+             mylegend, nrow = 2, heights = c(30, 2))                 # Set the height of the rows (trial and error)
 
 # What about if we have common variable on a single axis?
 # common axis labels
 
-atk_def <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = Type.1)) +
+atk_def <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Defense, color = `Type 1`)) +
   geom_point()+ 
   labs(x = "")+
   theme(legend.position="bottom")
 
-atk_hp <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = HP, color = Type.1)) +
+atk_hp <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = HP, color = `Type 1`)) +
   geom_point()+ 
   labs(x = "")+ 
   theme(legend.position="bottom")
 
-atk_spd <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Speed, color = Type.1)) +
+atk_spd <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Speed, color = `Type 1`)) +
   geom_point()+ 
   labs(x = "")+
   theme(legend.position="bottom")
 
-atk_spatk <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = Sp..Atk, color = Type.1)) +
+atk_spatk <- ggplot(data = poke_mod, mapping = aes(x = Attack, y = `Sp. Atk`, color = `Type 1`)) +
   geom_point()+ 
   labs(x = "")+ 
   theme(legend.position="bottom")
@@ -91,7 +90,7 @@ grid.arrange(mylegend, arrangeGrob(atk_def + theme(legend.position = "none"), #D
                          atk_spd + theme(legend.position = "none"),              
                          atk_spatk + theme(legend.position = "none"),
                          ncol = 2, nrow = 2),                         
-             nrow = 2, heights = c(1, 30),
+             nrow = 2, heights = c(2, 30),
              bottom = "Attack")
 
 # Opportunities here are endless
@@ -114,7 +113,7 @@ atk_histo <- ggplot(data = poke_mod, mapping = aes(x = Attack, fill = `Type 1`))
     axis.title.x = element_blank()
   )
 
-def_histo <- ggplot(data = poke_mod, mapping = aes(x = Defense, fill = `Type.1`))+
+def_histo <- ggplot(data = poke_mod, mapping = aes(x = Defense, fill = `Type 1`))+
   geom_histogram()+
   theme(
     legend.position = "none",
