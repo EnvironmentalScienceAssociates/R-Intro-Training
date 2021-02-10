@@ -2,7 +2,7 @@
 title: "ggplot Continued"
 author: 
   - "Taylor Spaulding"
-date: "2021-01-22"
+date: "2021-02-05"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -49,7 +49,7 @@ library(gridExtra)
 Load in the data from a dataset stored in the Project. 
 
 ```{r echo = TRUE}
-poke <- read_csv("C:/Users/tspaulding/Documents/R/R-Intro-Training/Data/Pokemon.csv")
+poke <- read_csv("Pokemon.csv")
 
 poke_mod <- poke %>%
   filter(`Type 1` %in% c("Grass","Water","Fire")) #filter for just those with these types
